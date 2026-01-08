@@ -636,14 +636,20 @@ window.toggleExpand = function (id) {
 window.switchView = function (view) {
   const dashboard = document.getElementById('view-dashboard');
   const todo = document.getElementById('view-todo');
+
+  // Mobile Nav
   const navHome = document.getElementById('nav-home');
   const navTodo = document.getElementById('nav-todo');
+
+  // Desktop Nav
+  const sideHome = document.getElementById('side-nav-home');
+  const sideTodo = document.getElementById('side-nav-todo');
 
   if (view === 'dashboard') {
     dashboard.classList.remove('hidden');
     todo.classList.add('hidden');
 
-    // Update Nav Active State
+    // Mobile
     navHome.classList.add('text-brand-600', 'dark:text-brand-500');
     navHome.classList.remove('text-slate-400', 'dark:text-slate-500');
     navHome.querySelector('.material-symbols-outlined').classList.add('fill-1');
@@ -651,11 +657,23 @@ window.switchView = function (view) {
     navTodo.classList.remove('text-brand-600', 'dark:text-brand-500');
     navTodo.classList.add('text-slate-400', 'dark:text-slate-500');
     navTodo.querySelector('.material-symbols-outlined').classList.remove('fill-1');
+
+    // Sidebar
+    if (sideHome) {
+      sideHome.classList.remove('text-slate-400', 'bg-transparent', 'border-transparent');
+      sideHome.classList.add('text-white', 'bg-slate-800/50', 'border-slate-700/50', 'shadow-sm');
+      sideHome.querySelector('.material-symbols-outlined').classList.add('text-brand-500', 'fill-1');
+
+      sideTodo.classList.add('text-slate-400', 'bg-transparent', 'border-transparent');
+      sideTodo.classList.remove('text-white', 'bg-slate-800/50', 'border-slate-700/50', 'shadow-sm');
+      sideTodo.querySelector('.material-symbols-outlined').classList.remove('text-brand-500', 'fill-1');
+    }
+
   } else {
     dashboard.classList.add('hidden');
     todo.classList.remove('hidden');
 
-    // Update Nav Active State
+    // Mobile
     navTodo.classList.add('text-brand-600', 'dark:text-brand-500');
     navTodo.classList.remove('text-slate-400', 'dark:text-slate-500');
     navTodo.querySelector('.material-symbols-outlined').classList.add('fill-1');
@@ -663,6 +681,17 @@ window.switchView = function (view) {
     navHome.classList.remove('text-brand-600', 'dark:text-brand-500');
     navHome.classList.add('text-slate-400', 'dark:text-slate-500');
     navHome.querySelector('.material-symbols-outlined').classList.remove('fill-1');
+
+    // Sidebar
+    if (sideHome) {
+      sideTodo.classList.remove('text-slate-400', 'bg-transparent', 'border-transparent');
+      sideTodo.classList.add('text-white', 'bg-slate-800/50', 'border-slate-700/50', 'shadow-sm');
+      sideTodo.querySelector('.material-symbols-outlined').classList.add('text-brand-500', 'fill-1');
+
+      sideHome.classList.add('text-slate-400', 'bg-transparent', 'border-transparent');
+      sideHome.classList.remove('text-white', 'bg-slate-800/50', 'border-slate-700/50', 'shadow-sm');
+      sideHome.querySelector('.material-symbols-outlined').classList.remove('text-brand-500', 'fill-1');
+    }
 
     window.renderTodos();
   }
