@@ -587,38 +587,8 @@ window.toggleExpand = function (id) {
   }
 };
 
-<div class="card-expanded">
-  <div class="control-row">
-    <label style="color:#94a3b8; font-size:0.8rem; margin-bottom:4px; display:block;">Progress: ${progress}%</label>
-    <input type="range" min="0" max="100" value="${progress}"
-      oninput="document.getElementById('val-${task.id}').textContent = this.value + '%'"
-      onchange="window.updateProgress('${task.id}', this.value)">
-      <span id="val-${task.id}" style="display:none">${progress}%</span>
-  </div>
 
-  <div class="actions-grid">
-    <button class="action-chip" onclick="window.addProgress('${task.id}', 10)">+10%</button>
-    <button class="action-chip" onclick="window.addProgress('${task.id}', 25)">+25%</button>
-    <button class="action-chip done-btn" onclick="window.updateProgress('${task.id}', 100)">Mark Complete</button>
-  </div>
 
-  <div class="log-group">
-    <textarea class="log-input" placeholder="Type a new update... (Supports multiple paragraphs)"
-      onkeydown="if(event.key === 'Enter' && (event.metaKey || event.ctrlKey)) window.addLog('${task.id}', this)"></textarea>
-    <div class="log-submit-row">
-      <button class="log-btn" onclick="window.submitLog(event, '${task.id}')">Add Update</button>
-    </div>
-  </div>
-
-  <div class="log-feed">
-    ${logsHtml}
-  </div>
-</div>
-      </div >
-  `;
-    list.insertAdjacentHTML('beforeend', html);
-  });
-};
 
 function getPriorityLabel(p) {
   if (p === 'high') return 'P0 HIGH';
