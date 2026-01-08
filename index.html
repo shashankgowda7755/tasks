@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OneSystem OS - Task Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <div class="app-container">
+    <header>
+      <h1>OneSystem OS</h1>
+      <p class="subtitle">Operating System for NGO Scale</p>
+    </header>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="global-stat">0%</div>
+        <div class="stat-label">System Build</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="p0-stat" style="color: #ef4444">0</div>
+        <div class="stat-label">Critical Items</div>
+      </div>
+    </div>
+
+    <!-- Quick Add -->
+    <div class="quick-add-form">
+      <input type="text" id="task-input" class="input-transparent" placeholder="Type a new task and press Enter..."
+        onkeypress="if(event.key === 'Enter') window.addTask()">
+      <button class="add-trigger" onclick="window.addTask()">Add Task</button>
+    </div>
+
+    <!-- Filters -->
+    <div class="toolbar">
+      <div class="filter-group">
+        <button class="filter-btn active" data-filter="all" onclick="window.setFilter('all')">All</button>
+        <button class="filter-btn" data-filter="high" onclick="window.setFilter('high')">High Prior</button>
+        <button class="filter-btn" data-filter="crm" onclick="window.setFilter('crm')">CRM</button>
+        <button class="filter-btn" data-filter="automation" onclick="window.setFilter('automation')">Auto</button>
+      </div>
+      <button class="filter-btn" onclick="window.resetApp()" style="color: #ef4444; border-color: #ef4444;">Reset
+        Data</button>
+    </div>
+
+    <!-- List -->
+    <div class="task-list" id="task-list">
+      <!-- JS Injects Here -->
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
