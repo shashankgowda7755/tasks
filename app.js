@@ -182,32 +182,32 @@ window.init = async function () {
     }
   }
 
-  // LOCAL FALLBACK
+  // LOCAL FALLBACK (Only if Cloud failed)
   if (!loadedFromCloud) {
     const stored = localStorage.getItem('antigravity_tasks_v2');
     if (stored) {
       tasks = JSON.parse(stored);
       tasks.forEach(migrateData);
     }
+  }
 
-    // AGGRESSIVE SEED: If tasks is empty (either no storage or empty storage), SEED IT.
-    if (tasks.length === 0) {
-      console.log('No tasks found. Seeding Initial Data...');
-      tasks = INITIAL_DATA_RAW.map((item, idx) => ({
-        id: `seed-${idx}`,
-        title: item.t,
-        priority: item.p,
-        category: item.c,
-        dueDate: item.d,
-        progress: 0,
-        logs: [],
-        notes: '',
-        completed: false,
-        isVisible: true, // New Boolean
-        createdAt: Date.now()
-      }));
-      window.save();
-    }
+  // FINAL CHECK: If tasks are still empty (Cloud was empty OR Local was empty), SEED IT.
+  if (tasks.length === 0) {
+    console.log('Zero tasks detected in Cloud/Local. Injecting Roadmap...');
+    tasks = INITIAL_DATA_RAW.map((item, idx) => ({
+      id: `seed-${idx}`,
+      title: item.t,
+      priority: item.p,
+      category: item.c,
+      dueDate: item.d,
+      progress: 0,
+      logs: [],
+      notes: '',
+      completed: false,
+      isVisible: true,
+      createdAt: Date.now()
+    }));
+    window.save();
   }
 
   window.render();
@@ -395,13 +395,12 @@ window.submitLog = function (e, id) {
   window.addLog(id, input);
 };
 
-window.cyclePriority = function (e, id) {
+// VISIBILITY
+window.toggleVisibility = function (e, id) {
   e.stopPropagation();
   const task = tasks.find(t => t.id === id);
   if (task) {
-    if (task.priority === 'high') task.priority = 'medium';
-    else if (task.priority === 'medium') task.priority = 'low';
-    else task.priority = 'high';
+    task.isVisible = !task.isVisible;
     window.save();
     window.render();
   }
@@ -434,16 +433,17 @@ window.render = function () {
   }
 
   filtered.forEach(task => {
+    if (task.isVisible === undefined) task.isVisible = true;
+
     const progress = task.progress || 0;
     const isDone = progress === 100;
+    const isHidden = !task.isVisible;
 
     const r = 18; const c = 2 * Math.PI * r; const offset = c - (progress / 100) * c;
     const ringColor = isDone ? 'var(--success)' : 'var(--primary)';
 
-    // LOGS HTML GENERATION
-    // Ensure logs array exists
+    // LOGS HTML
     if (!task.logs) task.logs = [];
-
     let logsHtml = '';
     if (task.logs.length > 0) {
       logsHtml = task.logs.map(log => `
@@ -460,7 +460,7 @@ window.render = function () {
     }
 
     const html = `
-      <div class="task-card" id="card-${task.id}">
+      <div class="task-card ${isHidden ? 'task-hidden' : ''}" id="card-${task.id}" style="${isHidden ? 'opacity:0.6;' : ''}">
         <div class="card-main" onclick="window.toggleExpand('${task.id}')">
           <div class="status-ring">
             <svg class="ring-svg" viewBox="0 0 40 40">
@@ -477,7 +477,23 @@ window.render = function () {
                       onclick="event.stopPropagation()"
                       style="cursor:text; outline:none; border-bottom:1px dashed #475569;">${escapeHtml(task.title)}</span>
                 <span class="tag">${task.category || 'Gen'}</span>
+                ${isHidden ? '<span class="tag" style="background:#475569; color:white;">HIDDEN</span>' : ''}
              </div>
+             <div class="card-meta">
+               <span class="priority-badge p-${task.priority}" 
+                     onclick="window.cyclePriority(event, '${task.id}')"
+                     title="Click Priority">
+                     ${getPriorityLabel(task.priority)}
+               </span>
+               <span class="date-meta">Captured: ${formatDate(task.createdAt || Date.now())}</span>
+               <button class="icon-action-btn" onclick="window.toggleVisibility(event, '${task.id}')" title="Toggle Visibility" style="margin-left:8px; background:none; border:none; color:#64748b; cursor:pointer;">
+                  ${isHidden ?
+        `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>` :
+        `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`
+      }
+               </button>
+             </div>
+          </div>
              <div class="card-meta">
                <span class="priority-badge p-${task.priority}" 
                      onclick="window.cyclePriority(event, '${task.id}')"
