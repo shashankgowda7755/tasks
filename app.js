@@ -18,9 +18,128 @@ const addDays = (days) => {
 };
 
 const INITIAL_DATA_RAW = [
+  // 1. CORE SYSTEM ARCHITECTURE
   { t: "Design unified operating system", p: "high", c: "Core Architecture", d: addDays(2) },
   { t: "Define system architecture layers", p: "high", c: "Core Architecture", d: addDays(2) },
-  { t: "Audit Cold Outreach Strategy (Meta Policy compliant)", p: "high", c: "Governance", d: addDays(2) }
+  { t: "Decide build vs buy vs integrate", p: "high", c: "Core Architecture", d: addDays(3) },
+  { t: "Ensure solo-operator maintainability", p: "high", c: "Core Architecture", d: addDays(3) },
+  { t: "Ensure scalability to 50+ users", p: "high", c: "Core Architecture", d: addDays(3) },
+  { t: "Prevent data silos", p: "high", c: "Core Architecture", d: addDays(3) },
+  { t: "Define single source of truth", p: "high", c: "Core Architecture", d: addDays(3) },
+
+  // 2. CRM (CENTRAL BRAIN)
+  { t: "Select central CRM platform", p: "high", c: "CRM", d: addDays(4) },
+  { t: "Create CRM modules (Leads, Donors, etc)", p: "high", c: "CRM", d: addDays(4) },
+  { t: "Configure role-based views", p: "high", c: "CRM", d: addDays(5) },
+  { t: "Log all activities automatically", p: "high", c: "CRM", d: addDays(5) },
+  { t: "Automate reminders & follow-ups", p: "high", c: "CRM", d: addDays(5) },
+  { t: "Migrate 200–300 past events", p: "medium", c: "CRM", d: addDays(10) },
+  { t: "Configure permissions", p: "high", c: "CRM", d: addDays(6) },
+
+  // 3. OUTBOUND SALES SYSTEM
+  { t: "Define outbound sales workflow", p: "high", c: "Sales", d: addDays(7) },
+  { t: "Track email / WhatsApp / calls", p: "high", c: "Sales", d: addDays(7) },
+  { t: "Track outreach metrics", p: "high", c: "Sales", d: addDays(7) },
+  { t: "Define pipeline stages", p: "high", c: "Sales", d: addDays(7) },
+  { t: "Track deal values & revenue", p: "high", c: "Sales", d: addDays(8) },
+  { t: "Track sales cycle duration", p: "medium", c: "Sales", d: addDays(14) },
+  { t: "Track repeat clients & renewals", p: "medium", c: "Sales", d: addDays(14) },
+  { t: "Automate sales follow-ups", p: "high", c: "Sales", d: addDays(8) },
+  { t: "Calendar-based reminders", p: "high", c: "Sales", d: addDays(8) },
+
+  // 4. FOLLOW-UP AUTOMATION
+  { t: "Identify follow-up triggers", p: "high", c: "Automation", d: addDays(9) },
+  { t: "Email follow-up automation", p: "high", c: "Automation", d: addDays(9) },
+  { t: "WhatsApp follow-up automation", p: "high", c: "Automation", d: addDays(9) },
+  { t: "Call reminder automation", p: "medium", c: "Automation", d: addDays(12) },
+  { t: "Conditional logic (no reply, proposal sent)", p: "high", c: "Automation", d: addDays(10) },
+  { t: "Snooze & reschedule logic", p: "medium", c: "Automation", d: addDays(12) },
+
+  // 5. WHATSAPP AUTOMATION
+  { t: "Configure Meta WhatsApp API", p: "high", c: "WhatsApp", d: addDays(10) },
+  { t: "Enable two-way conversations", p: "high", c: "WhatsApp", d: addDays(10) },
+  { t: "Create approved templates", p: "high", c: "WhatsApp", d: addDays(10) },
+  { t: "CRM integration (WhatsApp)", p: "high", c: "WhatsApp", d: addDays(11) },
+  { t: "Number safety & compliance", p: "high", c: "WhatsApp", d: addDays(11) },
+  { t: "Conversation logging", p: "high", c: "WhatsApp", d: addDays(11) },
+
+  // 6. EMAIL SYSTEM
+  { t: "Google Workspace integration", p: "high", c: "Email", d: addDays(12) },
+  { t: "Bulk email sending", p: "high", c: "Email", d: addDays(12) },
+  { t: "Audience segmentation", p: "high", c: "Email", d: addDays(12) },
+  { t: "Personalization tokens", p: "high", c: "Email", d: addDays(13) },
+  { t: "Reply detection", p: "high", c: "Email", d: addDays(13) },
+
+  // 8. PROJECT MANAGEMENT
+  { t: "Configure Jira projects", p: "high", c: "Projects", d: addDays(14) },
+  { t: "Event & campaign projects", p: "high", c: "Projects", d: addDays(14) },
+  { t: "Workflow definitions", p: "high", c: "Projects", d: addDays(14) },
+  { t: "Task ownership & deadlines", p: "high", c: "Projects", d: addDays(14) },
+  { t: "Progress dashboards", p: "high", c: "Projects", d: addDays(15) },
+  { t: "CRM ↔ Jira integration", p: "high", c: "Projects", d: addDays(15) },
+
+  // 9. EVENT CRM
+  { t: "Event as project model", p: "high", c: "Events", d: addDays(15) },
+  { t: "Event checklists", p: "high", c: "Events", d: addDays(15) },
+  { t: "Lifecycle tracking", p: "high", c: "Events", d: addDays(16) },
+  { t: "Contact tracking", p: "high", c: "Events", d: addDays(16) },
+  { t: "Report submission tracking", p: "high", c: "Events", d: addDays(16) },
+
+  // 11. CUSTOM WEBSITES
+  { t: "Certificate generation sites", p: "high", c: "Websites", d: addDays(18) },
+  { t: "Campaign landing pages", p: "high", c: "Websites", d: addDays(18) },
+  { t: "Form-based data capture", p: "high", c: "Websites", d: addDays(19) },
+  { t: "Auto certificate generation", p: "high", c: "Websites", d: addDays(19) },
+  { t: "Download support", p: "high", c: "Websites", d: addDays(19) },
+  { t: "Template reuse", p: "high", c: "Websites", d: addDays(20) },
+
+  // 12. DESIGN SYSTEM
+  { t: "Certificate templates", p: "high", c: "Design", d: addDays(20) },
+  { t: "Non-designer editing capabilities", p: "high", c: "Design", d: addDays(20) },
+  { t: "Brand consistency guide", p: "high", c: "Design", d: addDays(20) },
+
+  // 13. DATA EXTRACTION
+  { t: "Structured storage for scraped data", p: "high", c: "Data", d: addDays(22) },
+  { t: "Source identification", p: "medium", c: "Data", d: addDays(25) },
+  { t: "Location & Org scraping", p: "medium", c: "Data", d: addDays(25) },
+
+  // 14. REPORTING
+  { t: "Sales dashboards", p: "high", c: "Reporting", d: addDays(30) },
+  { t: "Client servicing dashboards", p: "high", c: "Reporting", d: addDays(30) },
+  { t: "Operations dashboards", p: "high", c: "Reporting", d: addDays(30) },
+  { t: "CEO snapshot dashboard", p: "high", c: "Reporting", d: addDays(30) },
+  { t: "Auto-refresh logic", p: "high", c: "Reporting", d: addDays(31) },
+
+  // 15. IMPACT REPORTING
+  { t: "Impact report templates", p: "high", c: "Impact", d: addDays(32) },
+  { t: "Automated report generation", p: "high", c: "Impact", d: addDays(32) },
+  { t: "PDF / deck export", p: "high", c: "Impact", d: addDays(32) },
+
+  // 17. DONOR ENGAGEMENT
+  { t: "Donor database setup", p: "high", c: "Donors", d: addDays(35) },
+  { t: "Monthly messaging automation", p: "high", c: "Donors", d: addDays(35) },
+  { t: "Month-based logic", p: "medium", c: "Donors", d: addDays(40) },
+
+  // 18. CAMPAIGNS
+  { t: "Campaign workflow design", p: "high", c: "Campaigns", d: addDays(36) },
+  { t: "Outreach automation", p: "high", c: "Campaigns", d: addDays(36) },
+  { t: "Participation tracking", p: "high", c: "Campaigns", d: addDays(37) },
+  { t: "Performance metrics", p: "medium", c: "Campaigns", d: addDays(40) },
+
+  // 21. FINANCE
+  { t: "Budget templates", p: "high", c: "Finance", d: addDays(45) },
+  { t: "Dynamic calculators", p: "high", c: "Finance", d: addDays(45) },
+  { t: "Event-wise reuse", p: "high", c: "Finance", d: addDays(45) },
+
+  // 22. TEAM TASK SCHEDULING
+  { t: "Daily task assignment logic", p: "high", c: "Team", d: addDays(50) },
+  { t: "Morning reminders", p: "high", c: "Team", d: addDays(50) },
+  { t: "Evening status collection", p: "high", c: "Team", d: addDays(50) },
+  { t: "WhatsApp nudges", p: "high", c: "Team", d: addDays(50) },
+
+  // 24. GOVERNANCE
+  { t: "Automation vs manual rules", p: "high", c: "Gov", d: addDays(60) },
+  { t: "Documentation", p: "high", c: "Gov", d: addDays(60) },
 ];
 
 // STATE
@@ -58,8 +177,8 @@ window.init = async function () {
         }
       }
     } catch (e) {
-      console.error('Cloud Load Error', e);
-      alert('Connection Error: Working offline. Data will stick to this device only.');
+      console.warn('Cloud Load Warning: using local data for now.', e);
+      // alert('Connection Error: Working offline. Data will stick to this device only.');
     }
   }
 
