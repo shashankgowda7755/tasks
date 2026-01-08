@@ -527,41 +527,41 @@ window.render = function () {
     const html = `
     <div class="group bg-surface-light dark:bg-surface-dark rounded-xl p-5 shadow-card hover:shadow-md transition-all border-l-4 ${borderColors[task.priority] || 'border-l-slate-400'} relative overflow-hidden mb-4" id="card-${task.id}">
         <!-- Main Row -->
-        <div class="flex justify-between items-start mb-3 cursor-pointer" onclick="window.toggleExpand('${task.id}')">
-            <div class="flex flex-col gap-1">
-                <span class="text-xs uppercase font-bold text-slate-400 tracking-wider" 
+        <div class="flex justify-between items-start mb-4 cursor-pointer" onclick="window.toggleExpand('${task.id}')">
+            <div class="flex flex-col gap-1.5">
+                <span class="text-sm uppercase font-bold text-slate-400 tracking-wider" 
                       contenteditable="true" onblur="window.updateCategory('${task.id}', this)" onclick="event.stopPropagation()">
                       ${task.category || 'General'}
                 </span>
-                <h3 class="text-lg font-bold text-slate-800 dark:text-white leading-snug ${isDone ? 'line-through opacity-50' : ''}"
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white leading-snug ${isDone ? 'line-through opacity-50' : ''}"
                     contenteditable="true" onblur="window.updateTitle('${task.id}', this)" onclick="event.stopPropagation()">
                     ${escapeHtml(task.title)}
                 </h3>
             </div>
             
-            <button class="w-10 h-10 rounded-full flex items-center justify-center transition-colors shrink-0 ${isDone ? 'text-brand-500 bg-brand-50/10' : 'text-slate-300 hover:text-brand-500 hover:bg-slate-50 dark:hover:bg-slate-700'}"
+            <button class="w-12 h-12 rounded-full flex items-center justify-center transition-colors shrink-0 ${isDone ? 'text-brand-500 bg-brand-50/10' : 'text-slate-300 hover:text-brand-500 hover:bg-slate-50 dark:hover:bg-slate-700'}"
                     onclick="event.stopPropagation(); window.toggleExpand('${task.id}')">
-                 <span class="material-symbols-outlined text-[26px]">${isDone ? 'check_circle' : 'radio_button_unchecked'}</span>
+                 <span class="material-symbols-outlined text-[32px]">${isDone ? 'check_circle' : 'radio_button_unchecked'}</span>
             </button>
         </div>
 
         <!-- Meta Row -->
         <div class="flex items-center justify-between pt-4 border-t border-slate-50 dark:border-slate-700/50">
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-5">
                 <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg ${bgColors[task.priority] || 'bg-slate-100 dark:bg-slate-800'}" onclick="window.cyclePriority(event, '${task.id}')">
-                    <span class="material-symbols-outlined text-[16px] fill-1">flag</span>
-                    <span class="text-xs font-bold uppercase tracking-wide">${task.priority}</span>
+                    <span class="material-symbols-outlined text-[18px] fill-1">flag</span>
+                    <span class="text-sm font-bold uppercase tracking-wide">${task.priority}</span>
                 </div>
                 <!-- Visiblity Toggle -->
                 <button onclick="window.toggleVisibility(event, '${task.id}')" class="text-slate-400 hover:text-brand-500 p-1">
-                    <span class="material-symbols-outlined text-[20px]">${isHidden ? 'visibility_off' : 'visibility'}</span>
+                    <span class="material-symbols-outlined text-[24px]">${isHidden ? 'visibility_off' : 'visibility'}</span>
                 </button>
                 ${isHidden ? '<span class="text-xs text-slate-500 uppercase font-medium">Hidden</span>' : ''}
             </div>
-            <div class="flex items-center gap-3">
-                 <span class="text-sm font-bold ${isDone ? 'text-brand-500' : 'text-slate-500'}">${progress}%</span>
+            <div class="flex items-center gap-4">
+                 <span class="text-base font-bold ${isDone ? 'text-brand-500' : 'text-slate-500'}">${progress}%</span>
                  <button class="text-slate-400 hover:text-red-500 p-1" onclick="window.deleteTask(event, '${task.id}')">
-                    <span class="material-symbols-outlined text-[22px]">delete</span>
+                    <span class="material-symbols-outlined text-[24px]">delete</span>
                  </button>
             </div>
         </div>
