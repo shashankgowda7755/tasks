@@ -20,6 +20,45 @@
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
     rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <style>
+    /* Global Mobile Scale Boost */
+    html {
+      font-size: 18px;
+      /* Default boosts everything (rem based) by 12.5% */
+    }
+
+    /* Custom Scrollbar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Custom Range Slider Thumb */
+    .custom-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      background: #3b82f6;
+      /* brand-500 */
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+    }
+
+    .custom-range::-moz-range-thumb {
+      width: 28px;
+      height: 28px;
+      background: #3b82f6;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+    }
+  </style>
   <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",

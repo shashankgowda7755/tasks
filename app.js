@@ -569,18 +569,18 @@ window.render = function () {
         <!-- Expanded Content (Hidden by default) -->
         <div class="card-expanded mt-6 pt-5 border-t border-dashed border-slate-700" style="display:none;" id="expand-${task.id}">
              <!-- Edit Details Row -->
-             <div class="grid grid-cols-2 gap-3 mb-4">
+             <div class="grid grid-cols-2 gap-4 mb-5">
                 <div class="relative">
-                    <label class="block text-[10px] uppercase text-slate-500 font-bold mb-1">Priority</label>
-                    <select onchange="window.setPriority('${task.id}', this.value)" class="w-full bg-slate-800 text-xs text-white rounded p-1.5 border border-slate-700">
+                    <label class="block text-xs uppercase text-slate-500 font-bold mb-2 tracking-wider">Priority</label>
+                    <select onchange="window.setPriority('${task.id}', this.value)" class="w-full bg-slate-800 text-sm text-white rounded-lg px-3 py-3 border border-slate-700 focus:ring-2 focus:ring-brand-500 appearance-none font-medium">
                         <option value="high" ${task.priority === 'high' ? 'selected' : ''}>High (P0)</option>
                         <option value="medium" ${task.priority === 'medium' ? 'selected' : ''}>Medium (P1)</option>
                         <option value="low" ${task.priority === 'low' ? 'selected' : ''}>Low (P2)</option>
                     </select>
                 </div>
                 <div class="relative">
-                    <label class="block text-[10px] uppercase text-slate-500 font-bold mb-1">Category</label>
-                    <select onchange="window.updateCategory('${task.id}', this.value)" class="w-full bg-slate-800 text-xs text-white rounded p-1.5 border border-slate-700">
+                    <label class="block text-xs uppercase text-slate-500 font-bold mb-2 tracking-wider">Category</label>
+                    <select onchange="window.updateCategory('${task.id}', this.value)" class="w-full bg-slate-800 text-sm text-white rounded-lg px-3 py-3 border border-slate-700 focus:ring-2 focus:ring-brand-500 appearance-none font-medium">
                         <option value="General" ${task.category === 'General' ? 'selected' : ''}>General</option>
                         <option value="CRM" ${task.category === 'CRM' ? 'selected' : ''}>CRM</option>
                         <option value="Automation" ${task.category === 'Automation' ? 'selected' : ''}>Automation</option>
@@ -594,11 +594,11 @@ window.render = function () {
              </div>
 
              <!-- Progress Control -->
-             <div class="flex items-center gap-2 mb-3">
-                <input type="range" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer" min="0" max="100" value="${progress}"
+             <div class="flex items-center gap-4 mb-5">
+                <input type="range" class="w-full h-4 bg-slate-700 rounded-full appearance-none cursor-pointer custom-range" min="0" max="100" value="${progress}"
                        oninput="this.nextElementSibling.innerText = this.value + '%'"
                        onchange="window.updateProgress('${task.id}', this.value)">
-                <span class="text-xs w-8 text-right font-mono">${progress}%</span>
+                <span class="text-xl font-bold text-brand-500 w-12 text-right font-mono">${progress}%</span>
              </div>
              
              <!-- Log Input -->
