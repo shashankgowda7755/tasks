@@ -188,8 +188,11 @@ window.init = async function () {
     if (stored) {
       tasks = JSON.parse(stored);
       tasks.forEach(migrateData);
-    } else {
-      // Seed
+    }
+
+    // AGGRESSIVE SEED: If tasks is empty (either no storage or empty storage), SEED IT.
+    if (tasks.length === 0) {
+      console.log('No tasks found. Seeding Initial Data...');
       tasks = INITIAL_DATA_RAW.map((item, idx) => ({
         id: `seed-${idx}`,
         title: item.t,
@@ -200,6 +203,7 @@ window.init = async function () {
         logs: [],
         notes: '',
         completed: false,
+        isVisible: true, // New Boolean
         createdAt: Date.now()
       }));
       window.save();
