@@ -494,15 +494,6 @@ window.render = function () {
                </button>
              </div>
           </div>
-             <div class="card-meta">
-               <span class="priority-badge p-${task.priority}" 
-                     onclick="window.cyclePriority(event, '${task.id}')"
-                     title="Click Priority">
-                     ${getPriorityLabel(task.priority)}
-               </span>
-               <span class="date-meta">Captured: ${formatDate(task.createdAt || Date.now())}</span>
-             </div>
-          </div>
           <button class="delete-icon-btn" onclick="window.deleteTask(event, '${task.id}')">${ICONS.trash}</button>
         </div>
         
