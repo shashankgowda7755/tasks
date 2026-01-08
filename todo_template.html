@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>To Do List</title>
+  <link rel="manifest" href="manifest.json">
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#2b6cee",
+            "background-light": "#f6f6f8",
+            "background-dark": "#101622",
+            "card-dark": "#192233",
+            "text-secondary": "#92a4c9",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"],
+            "body": ["Noto Sans", "sans-serif"],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #2b6cee;
+      border-radius: 4px;
+    }
+
+    body {
+      min-height: max(884px, 100dvh);
+    }
+
+    /* Modal Styles */
+    #add-modal {
+      transition: opacity 0.2s;
+    }
+
+    #add-modal.open {
+      pointer-events: auto;
+      opacity: 1;
+    }
+
+    #add-modal.open>div {
+      transform: scale(1);
+    }
+  </style>
+</head>
+
+<body
+  class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden pb-24">
+
+  <!-- Top App Bar -->
+  <div
+    class="sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center p-4 justify-between">
+      <div class="flex items-center gap-3">
+        <div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-primary"
+          style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBR44R8ZaFk7l4gl8vNn4zdShSQYWDuqq1MMPlrnIYrCFVpZz7PA91t5IGGb4m75zrwxGUZCfyHVcStk0WxILcmuW1YR3AbKgakH1xQv1uvKtFnooyRxLl0ucinuIjDqOQfnQ3XEq2Ipq8xqGlBSgQSZZPdQKk2xS_FExgvq0tSTMUErUXKvUhGC01etmZ4egvQQD-aF27panavk9W_sZtMBomT1NJboYLyIykndPjvg1NKiTI-kHPNumz7RN1goDNaNCC8NASw8PvO");'>
+        </div>
+        <div class="flex flex-col">
+          <h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">To Do List</h2>
+          <span class="text-xs font-medium text-text-secondary" id="current-date">Today</span>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2">
+        <button onclick="window.generateReport()"
+          class="flex items-center justify-center rounded-full size-10 bg-transparent text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+          <span class="material-symbols-outlined" style="font-size: 24px;">bar_chart</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="flex flex-col gap-6 px-4 py-4 w-full max-w-md mx-auto">
+
+    <!-- My Day Card -->
+    <div class="@container">
+      <div
+        class="flex flex-col items-stretch justify-start rounded-2xl shadow-lg bg-white dark:bg-card-dark overflow-hidden ring-1 ring-black/5 dark:ring-white/10">
+        <div class="w-full bg-center bg-no-repeat h-32 bg-cover relative"
+          style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDhlPMKa8pjMO50PY0yQusUu2nFNSm8tm7R2gLjx1lTEH3CduMEj60SfGGexKF6H3aQ95xhTNLBaRRRsU9w6nhSiMIvekk3EPr-jCeiCy6PFacwTAc43DyIgPQNNNppQj3rfWG4miRZHvAUbSir9dhno8Zep4iX8NtG6nKooQy8CcRYwHSRU3yDPCa6LUb9aEStqezOhbL5E9zhyu-08vv20ztDd9spdeh9StpR5brbK8XNSgdlqGCZvHg2LuEQju61XrFPZl30BT9n");'>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+          <div class="absolute bottom-3 left-4">
+            <p class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">My Day</p>
+          </div>
+        </div>
+        <div class="flex w-full grow flex-col gap-4 p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex flex-col">
+              <p class="text-text-secondary text-sm font-medium"><span id="pending-count">0</span> Tasks Remaining</p>
+              <p class="text-gray-800 dark:text-gray-200 text-sm font-medium mt-1 flex items-center gap-1">
+                <span class="material-symbols-outlined text-primary text-base">event</span>
+                Track your progress
+              </p>
+            </div>
+            <button
+              class="shrink-0 flex items-center justify-center rounded-lg h-9 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-600 transition-colors">
+              View Schedule
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Overview -->
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg font-bold leading-tight tracking-[-0.015em]">Progress Overview</h3>
+      </div>
+      <div
+        class="rounded-2xl bg-white dark:bg-card-dark p-5 shadow-sm ring-1 ring-black/5 dark:ring-white/10 flex items-center justify-between gap-6">
+        <div class="relative size-24 shrink-0 rounded-full flex items-center justify-center transition-all"
+          id="chart-pie">
+          <div
+            class="absolute inset-2 bg-white dark:bg-card-dark rounded-full flex items-col justify-center items-center flex-col">
+            <span class="text-xs text-text-secondary font-medium">Done</span>
+            <span class="text-sm font-bold dark:text-white" id="stat-percent">0%</span>
+          </div>
+        </div>
+        <div class="flex-1 flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-text-secondary">Completed</span>
+            <span class="text-sm font-bold dark:text-white"><span id="stat-completed">0</span>/<span
+                id="stat-total">0</span></span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div class="w-full h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+              <div class="h-full bg-primary w-0 rounded-full transition-all duration-500" id="stat-bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tasks List -->
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg font-bold leading-tight tracking-[-0.015em]">Tasks</h3>
+        <div class="relative">
+          <button onclick="document.getElementById('sort-popover').classList.toggle('hidden')"
+            class="p-1 text-text-secondary hover:text-white">
+            <span class="material-symbols-outlined">tune</span>
+          </button>
+          <div id="sort-popover"
+            class="hidden absolute right-0 top-8 w-48 bg-card-dark border border-gray-700 rounded-lg shadow-xl z-50 p-2">
+            <div class="text-xs text-gray-500 mb-2 px-2">SORT BY</div>
+            <button onclick="window.setSort('p-high'); document.getElementById('sort-popover').classList.add('hidden')"
+              class="w-full text-left p-2 text-sm text-gray-300 hover:bg-white/10 rounded">Priority (High-Low)</button>
+            <button onclick="window.setSort('p-low'); document.getElementById('sort-popover').classList.add('hidden')"
+              class="w-full text-left p-2 text-sm text-gray-300 hover:bg-white/10 rounded">Priority (Low-High)</button>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-3" id="task-list">
+        <!-- Tasks Injected by JS -->
+        <div class="text-center text-gray-500 py-10">Loading Your To Do List...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Floating Action Button -->
+  <div class="fixed bottom-24 right-4 z-30">
+    <button onclick="toggleModal()"
+      class="shadow-xl shadow-primary/30 flex items-center justify-center size-14 rounded-full bg-primary text-white hover:bg-blue-600 active:scale-95 transition-all">
+      <span class="material-symbols-outlined text-3xl">add</span>
+    </button>
+  </div>
+
+  <!-- ADD MODAL -->
+  <div id="add-modal"
+    class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 opacity-0 pointer-events-none transition-all duration-300 backdrop-blur-sm">
+    <div
+      class="bg-card-dark w-full max-w-lg rounded-2xl p-6 shadow-2xl transform scale-95 transition-all duration-300 border border-gray-700 relative">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">Add New Task</h3>
+        <button onclick="toggleModal()" class="text-gray-400 hover:text-white"><span
+            class="material-symbols-outlined">close</span></button>
+      </div>
+      <div class="flex flex-col gap-5">
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Title</label>
+          <input type="text" id="task-input"
+            class="w-full bg-gray-800 border-gray-700 rounded-xl p-4 text-white focus:ring-primary focus:border-primary">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Priority</label>
+            <select id="new-task-priority" class="w-full bg-gray-800 border-gray-700 rounded-xl p-3 text-white">
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Category</label>
+            <select id="new-task-category" class="w-full bg-gray-800 border-gray-700 rounded-xl p-3 text-white">
+              <option value="General">General</option>
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Health">Health</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="window.addTask(); toggleModal();"
+          class="w-full bg-primary text-white font-bold py-4 rounded-xl mt-2 hover:bg-blue-600">Add Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div
+    class="fixed bottom-0 left-0 w-full z-40 bg-white/90 dark:bg-background-dark/95 backdrop-blur-lg border-t border-gray-200 dark:border-gray-800 pb-safe">
+    <div class="flex justify-around items-center h-16 max-w-md mx-auto">
+      <button class="flex flex-col items-center justify-center gap-1 w-16 text-primary">
+        <span class="material-symbols-outlined filled">check_circle</span>
+        <span class="text-[10px] font-medium">To Do</span>
+      </button>
+      <button class="flex flex-col items-center justify-center gap-1 w-16 text-gray-400 hover:text-white">
+        <span class="material-symbols-outlined">calendar_month</span>
+        <span class="text-[10px] font-medium">Calendar</span>
+      </button>
+      <button class="flex flex-col items-center justify-center gap-1 w-16 text-gray-400 hover:text-white">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="text-[10px] font-medium">Settings</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Utils
+    document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+
+    function toggleModal() {
+      const m = document.getElementById('add-modal');
+      m.classList.toggle('open');
+      if (m.classList.contains('open')) document.getElementById('task-input').focus();
+    }
+
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+  </script>
+  <script src="app.js"></script>
+</body>
+
+</html>

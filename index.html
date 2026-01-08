@@ -158,12 +158,12 @@
         </div>
       </header>
       <main class="flex flex-col w-full max-w-7xl mx-auto pb-6">
-        <section class="mt-4 px-5">
-          <div class="flex items-center justify-between mb-3">
-            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">System
+        <section class="mt-6 px-5">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">System
               Overview
             </h2>
-            <button onclick="generateReport()" class="text-brand-500 text-xs font-semibold hover:underline">Full
+            <button onclick="generateReport()" class="text-brand-500 text-sm font-bold hover:underline">Full
               Report</button>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-2">
@@ -202,12 +202,12 @@
 
         <!-- Filters Section -->
         <section class="mt-8">
-          <div class="px-5 mb-4">
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white">Task Management</h2>
-            <p class="text-sm text-slate-500 dark:text-slate-400">Manage field operations and logistics.</p>
+          <div class="px-5 mb-5">
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Task Management</h2>
+            <p class="text-base text-slate-500 dark:text-slate-400 mt-1">Manage field operations and logistics.</p>
           </div>
 
-          <div class="flex flex-col sm:flex-row gap-3 overflow-x-auto no-scrollbar pb-2 mb-4">
+          <div class="flex flex-col sm:flex-row gap-3 overflow-x-auto no-scrollbar pb-2 mb-6 px-5 md:px-0">
             <button onclick="toggleModal()"
               class="flex items-center justify-center gap-2 px-4 py-3 bg-brand-500 text-white rounded-xl shadow-lg shadow-brand-500/20 active:scale-95 transition-transform shrink-0 w-full sm:w-auto">
               <span class="material-symbols-outlined text-[24px]">add_circle</span>
@@ -226,23 +226,23 @@
           </div>
 
           <div
-            class="sticky top-[73px] z-30 bg-bg-light/95 dark:bg-bg-dark/95 backdrop-blur-sm px-5 py-2 border-b border-slate-200 dark:border-slate-800/50 mb-4 transition-all">
+            class="sticky top-[73px] z-30 bg-bg-light/95 dark:bg-bg-dark/95 backdrop-blur-sm px-5 py-3 border-b border-slate-200 dark:border-slate-800/50 mb-6 transition-all">
             <div class="flex items-center justify-between gap-2">
-              <div class="flex gap-2 overflow-x-auto no-scrollbar mask-gradient">
+              <div class="flex gap-2.5 overflow-x-auto no-scrollbar mask-gradient py-1">
                 <button onclick="window.setFilter('all')"
-                  class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-800 dark:bg-white text-white dark:text-slate-900 shadow-sm shrink-0">All</button>
+                  class="px-4 py-2 rounded-full text-sm font-bold bg-slate-800 dark:bg-white text-white dark:text-slate-900 shadow-sm shrink-0">All</button>
                 <button onclick="window.setFilter('high')"
-                  class="px-3 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shrink-0">High
+                  class="px-4 py-2 rounded-full text-sm font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shrink-0">High
                   Priority</button>
                 <button onclick="window.setFilter('crm')"
-                  class="px-3 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shrink-0">CRM</button>
+                  class="px-4 py-2 rounded-full text-sm font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shrink-0">CRM</button>
                 <button onclick="window.setFilter('automation')"
-                  class="px-3 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shrink-0">Auto</button>
+                  class="px-4 py-2 rounded-full text-sm font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shrink-0">Auto</button>
               </div>
               <div class="relative">
                 <button onclick="document.getElementById('sort-menu').classList.toggle('hidden')"
-                  class="p-2 -mr-2 rounded-full text-slate-400 hover:text-brand-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                  <span class="material-symbols-outlined text-[24px]">sort</span>
+                  class="p-2.5 -mr-2 rounded-full text-slate-400 hover:text-brand-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                  <span class="material-symbols-outlined text-[28px]">sort</span>
                 </button>
 
                 <!-- Sort Menu -->
@@ -297,22 +297,22 @@
             </button>
           </div>
 
-          <div class="flex flex-col gap-5">
+          <div class="flex flex-col gap-6">
             <!-- Task Title -->
             <div>
-              <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Task Title</label>
+              <label class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Task Title</label>
               <input type="text" id="task-input"
-                class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-white placeholder-slate-500 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-lg shadow-inner transition-all"
+                class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-4 text-white placeholder-slate-500 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-xl shadow-inner transition-all"
                 placeholder="What needs to be done?">
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <!-- Priority -->
               <div>
-                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Priority</label>
+                <label class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Priority</label>
                 <div class="relative">
                   <select id="new-task-priority"
-                    class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 pl-10 text-white focus:ring-brand-500 cursor-pointer appearance-none">
+                    class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 pl-10 text-white focus:ring-brand-500 cursor-pointer appearance-none text-base font-medium">
                     <option value="high">🔴 High (P0)</option>
                     <option value="medium">🟠 Medium (P1)</option>
                     <option value="low">🟢 Low (P2)</option>
@@ -326,10 +326,10 @@
 
               <!-- Category -->
               <div>
-                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Category</label>
+                <label class="block text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Category</label>
                 <div class="relative">
                   <select id="new-task-category"
-                    class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 pl-10 text-white focus:ring-brand-500 appearance-none cursor-pointer">
+                    class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 pl-10 text-white focus:ring-brand-500 appearance-none cursor-pointer text-base font-medium">
                     <option value="General">General</option>
                     <option value="CRM">CRM</option>
                     <option value="Automation">Automation</option>
@@ -340,15 +340,16 @@
                     <option value="Incident">Incident</option>
                   </select>
                   <span
-                    class="absolute left-3 top-3.5 material-symbols-outlined text-[20px] text-slate-400 pointer-events-none">folder</span>
+                    class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[20px] text-slate-400 pointer-events-none">folder</span>
                   <span
-                    class="absolute right-3 top-3.5 material-symbols-outlined text-[20px] text-slate-400 pointer-events-none">expand_more</span>
+                    class="absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[20px] text-slate-400 pointer-events-none">expand_more</span>
                 </div>
               </div>
             </div>
 
             <button onclick="window.addTask(); toggleModal();"
-              class="w-full bg-brand-600 text-white font-bold py-4 rounded-xl mt-2 hover:bg-brand-500 hover:shadow-lg hover:shadow-brand-500/25 transition-all active:scale-95 text-lg flex items-center justify-center gap-2">
+              class="w-full bg-brand-600 text-white font-bold py-4 rounded-xl mt-4 hover:bg-brand-500 hover:shadow-lg hover:shadow-brand-500/25 transition-all active:scale-95 text-xl flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-[28px]">add_circle</span>
               Create Task
             </button>
           </div>
@@ -399,15 +400,15 @@
         <!-- Main List -->
         <div class="lg:col-span-8">
           <div
-            class="mb-4 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-3">
+            class="mb-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col gap-4">
             <input type="text" id="todo-input-text" placeholder="What needs to be done?"
-              class="w-full bg-transparent border-0 border-b border-slate-200 dark:border-slate-600 focus:ring-0 text-base py-2 px-0 text-slate-900 dark:text-white placeholder:text-slate-400">
+              class="w-full bg-transparent border-0 border-b border-slate-200 dark:border-slate-600 focus:ring-0 text-xl font-medium py-3 px-0 text-slate-900 dark:text-white placeholder:text-slate-400">
             <div class="flex justify-between items-center">
               <input type="datetime-local" id="todo-input-date"
-                class="bg-transparent text-xs text-slate-500 dark:text-slate-400 border-0 p-0 focus:ring-0">
+                class="bg-transparent text-sm font-bold text-slate-500 dark:text-slate-400 border-0 p-0 focus:ring-0">
               <button onclick="window.addToDoItem()"
-                class="bg-brand-500 text-white px-4 py-2 rounded-lg hover:bg-brand-600 transition-colors font-bold text-sm flex items-center gap-2">
-                <span class="material-symbols-outlined text-[18px]">add</span> Add
+                class="bg-brand-500 text-white px-6 py-3 rounded-xl hover:bg-brand-600 transition-colors font-bold text-lg flex items-center gap-2 shadow-lg shadow-brand-500/20 active:scale-95">
+                <span class="material-symbols-outlined text-[24px]">add</span> Add
               </button>
             </div>
           </div>
@@ -421,22 +422,23 @@
     </div>
 
     <!-- Navigation (Mobile Only) -->
+    <!-- Navigation (Mobile Only) -->
     <nav
-      class="lg:hidden fixed bottom-0 w-full z-50 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 pb-safe pt-2">
-      <div class="max-w-7xl mx-auto px-6 pb-4 pt-2">
-        <ul class="flex justify-between items-center">
+      class="lg:hidden fixed bottom-0 w-full z-50 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 pb-safe pt-3">
+      <div class="max-w-7xl mx-auto px-6 pb-5 pt-1">
+        <ul class="flex justify-around items-center">
           <li onclick="window.switchView('dashboard')"><a
-              class="flex flex-col items-center gap-1 text-brand-600 dark:text-brand-500 cursor-pointer nav-item"
-              id="nav-home"><span class="material-symbols-outlined text-[24px] fill-1">dashboard</span><span
-                class="text-[10px] font-medium">Home</span></a></li>
+              class="flex flex-col items-center gap-1.5 text-brand-600 dark:text-brand-500 cursor-pointer nav-item transition-transform active:scale-95"
+              id="nav-home"><span class="material-symbols-outlined text-[28px] fill-1">dashboard</span><span
+                class="text-xs font-bold tracking-wide">Home</span></a></li>
           <li onclick="window.switchView('todo')"><a
-              class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer nav-item"
-              id="nav-todo"><span class="material-symbols-outlined text-[24px]">check_circle</span><span
-                class="text-[10px] font-medium">To-Do</span></a></li>
+              class="flex flex-col items-center gap-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer nav-item transition-transform active:scale-95"
+              id="nav-todo"><span class="material-symbols-outlined text-[28px]">check_circle</span><span
+                class="text-xs font-bold tracking-wide">To-Do</span></a></li>
           <li><a
-              class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 cursor-not-allowed opacity-50"><span
-                class="material-symbols-outlined text-[24px]">settings</span><span
-                class="text-[10px] font-medium">Settings</span></a></li>
+              class="flex flex-col items-center gap-1.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 cursor-not-allowed opacity-50"><span
+                class="material-symbols-outlined text-[28px]">settings</span><span
+                class="text-xs font-bold tracking-wide">Settings</span></a></li>
         </ul>
       </div>
     </nav>

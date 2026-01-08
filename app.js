@@ -760,20 +760,20 @@ window.renderTodos = function () {
     }
 
     const html = `
-        <div class="group flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 shadow-sm ring-1 ring-black/5 dark:ring-white/10 active:scale-[0.98] transition-all cursor-pointer ${t.done ? 'opacity-50' : ''}" onclick="window.toggleTodo(${t.id})">
+        <div class="group flex items-center gap-5 p-5 rounded-xl bg-white dark:bg-slate-800 shadow-sm ring-1 ring-black/5 dark:ring-white/10 active:scale-[0.98] transition-all cursor-pointer ${t.done ? 'opacity-50' : ''}" onclick="window.toggleTodo(${t.id})">
             <div class="flex-shrink-0">
-                <div class="w-6 h-6 rounded-full border-2 ${t.done ? 'border-brand-500 bg-brand-500' : 'border-slate-300 dark:border-slate-500'} flex items-center justify-center transition-colors">
-                    ${t.done ? '<span class="material-symbols-outlined text-white text-sm">check</span>' : ''}
+                <div class="w-8 h-8 rounded-full border-[3px] ${t.done ? 'border-brand-500 bg-brand-500' : 'border-slate-300 dark:border-slate-500'} flex items-center justify-center transition-colors">
+                    ${t.done ? '<span class="material-symbols-outlined text-white text-[20px] font-bold">check</span>' : ''}
                 </div>
             </div>
-            <div class="flex-1 min-w-0">
-                <h4 class="text-base font-semibold ${t.done ? 'text-slate-400 line-through' : 'text-slate-900 dark:text-white'} truncate text-left">${escapeHtml(t.text)}</h4>
-                ${dateStr ? `<div class="flex items-center gap-1 mt-0.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
-                    <span class="material-symbols-outlined text-[14px]">event</span> ${dateStr}
+            <div class="flex-1 min-w-0 flex flex-col gap-1">
+                <h4 class="text-xl font-bold ${t.done ? 'text-slate-400 line-through' : 'text-slate-900 dark:text-white'} truncate text-left">${escapeHtml(t.text)}</h4>
+                ${dateStr ? `<div class="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 font-bold">
+                    <span class="material-symbols-outlined text-[18px]">event</span> ${dateStr}
                 </div>` : ''}
             </div>
-            <button onclick="window.deleteTodo(event, ${t.id})" class="text-slate-300 hover:text-red-500">
-                <span class="material-symbols-outlined">delete</span>
+            <button onclick="window.deleteTodo(event, ${t.id})" class="text-slate-300 hover:text-red-500 p-2">
+                <span class="material-symbols-outlined text-[24px]">delete</span>
             </button>
         </div>
         `;
