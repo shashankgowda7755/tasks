@@ -3,59 +3,54 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-  <title>OneSystem OS</title>
-  <!-- PWA -->
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>To Do List</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f172a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/192/task.png">
-
   <link href="https://fonts.googleapis.com" rel="preconnect" />
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap"
     rel="stylesheet" />
   <link
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
     rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script id="tailwind-config">
+  <script>
     tailwind.config = {
       darkMode: "class",
       theme: {
         extend: {
           colors: {
-            brand: { 500: "#3b82f6", 600: "#2563eb" },
-            accent: { orange: "#f97316", red: "#ef4444", green: "#22c55e", purple: "#a855f7" },
-            surface: { light: "#ffffff", dark: "#1e293b", darker: "#0f172a" },
-            bg: { light: "#f1f5f9", dark: "#020617" }
+            "primary": "#2b6cee",
+            "background-light": "#f6f6f8",
+            "background-dark": "#101622",
+            "card-dark": "#192233",
+            "text-secondary": "#92a4c9",
           },
-          fontFamily: { sans: ["Inter", "sans-serif"] },
-          boxShadow: {
-            'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-            'card': '0 0 0 1px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.05)'
-          }
+          fontFamily: {
+            "display": ["Inter", "sans-serif"],
+            "body": ["Noto Sans", "sans-serif"],
+          },
         },
       },
     }
   </script>
   <style>
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
+    ::-webkit-scrollbar {
+      width: 4px;
     }
 
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #2b6cee;
+      border-radius: 4px;
     }
 
     body {
       min-height: max(884px, 100dvh);
-    }
-
-    .mask-gradient {
-      -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
     }
 
     /* Modal Styles */
@@ -71,349 +66,202 @@
     #add-modal.open>div {
       transform: scale(1);
     }
-
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    }
   </style>
 </head>
 
 <body
-  class="bg-bg-light dark:bg-bg-dark text-slate-800 dark:text-slate-100 font-sans antialiased overflow-x-hidden min-h-screen relative pb-24">
+  class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden pb-24">
 
-  <header
-    class="sticky top-0 z-40 bg-bg-light/80 dark:bg-bg-dark/80 backdrop-blur-lg border-b border-transparent dark:border-slate-800 transition-all duration-300">
-    <div class="px-5 py-4 flex items-center justify-between">
+  <!-- Top App Bar -->
+  <div
+    class="sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+    <div class="flex items-center p-4 justify-between">
       <div class="flex items-center gap-3">
-        <div class="relative">
-          <div
-            class="w-10 h-10 rounded-full bg-slate-200 bg-cover bg-center ring-2 ring-white dark:ring-slate-700 shadow-sm"
-            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDA50GyuBDyUHvsZ_zkpLRFtoor5KeIKfHM03v-Ac7BuJ0NZwdMvbyaT9yFPEiW6Iv7eJ3pIi48_H9GK4OSU1un1Ccqa_2VpALxmDprIkO_S-1ruhQoJmTULj17O8UtX4BM5Sm1RQX5T37QukAyhjlnx0BYVbIWmcJlTYQS_84b2SjakQrDVESO0N0usj8xTfoFNiYJK7c-yizXApJM5H34V55mtGYjse0uDb0UuNKNF8IuwT3DRgI-amK17AlGNADSf9ax1gzUdm1B");'>
-          </div>
-          <div
-            class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white dark:border-slate-800">
-          </div>
+        <div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-primary"
+          style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBR44R8ZaFk7l4gl8vNn4zdShSQYWDuqq1MMPlrnIYrCFVpZz7PA91t5IGGb4m75zrwxGUZCfyHVcStk0WxILcmuW1YR3AbKgakH1xQv1uvKtFnooyRxLl0ucinuIjDqOQfnQ3XEq2Ipq8xqGlBSgQSZZPdQKk2xS_FExgvq0tSTMUErUXKvUhGC01etmZ4egvQQD-aF27panavk9W_sZtMBomT1NJboYLyIykndPjvg1NKiTI-kHPNumz7RN1goDNaNCC8NASw8PvO");'>
         </div>
         <div class="flex flex-col">
-          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">OneSystem OS</span>
-          <h1 class="text-lg font-bold leading-tight tracking-tight">Dashboard</h1>
+          <h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">To Do List</h2>
+          <span class="text-xs font-medium text-text-secondary" id="current-date">Today</span>
         </div>
       </div>
-      <div class="flex gap-2">
-        <button onclick="window.resetApp()"
-          class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 shadow-card flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-red-500 transition-colors relative"
-          title="Reset Data">
-          <span class="material-symbols-outlined text-[20px]">restart_alt</span>
-        </button>
-      </div>
-    </div>
-  </header>
-  <main class="flex flex-col w-full max-w-7xl mx-auto pb-6">
-    <section class="mt-4 px-5">
-      <div class="flex items-center justify-between mb-3">
-        <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">System Overview
-        </h2>
-        <button onclick="generateReport()" class="text-brand-500 text-xs font-semibold hover:underline">Full
-          Report</button>
-      </div>
-      <div class="flex overflow-x-auto gap-3 pb-2 no-scrollbar snap-x snap-mandatory">
-        <!-- Global Stat -->
-        <div
-          class="snap-center shrink-0 w-[160px] p-4 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-soft border border-slate-100 dark:border-slate-700/50 relative overflow-hidden flex flex-col justify-between h-40">
-          <div class="flex justify-between items-start z-10">
-            <span class="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
-              <span class="material-symbols-outlined text-[20px]">dns</span>
-            </span>
-          </div>
-          <div class="z-10">
-            <div class="text-3xl font-bold text-slate-900 dark:text-white mb-1" id="global-stat">0%</div>
-            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">System Build</p>
-          </div>
-          <div
-            class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full border-[6px] border-blue-500/10 dark:border-blue-400/10">
-          </div>
-        </div>
-
-        <!-- Critical Stat -->
-        <div
-          class="snap-center shrink-0 w-[160px] p-4 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-soft border border-slate-100 dark:border-slate-700/50 relative overflow-hidden flex flex-col justify-between h-40 group">
-          <div class="flex justify-between items-start z-10">
-            <span class="p-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400">
-              <span class="material-symbols-outlined text-[20px]">warning</span>
-            </span>
-          </div>
-          <div class="z-10">
-            <div class="text-3xl font-bold text-slate-900 dark:text-white mb-1" id="p0-stat">0</div>
-            <p class="text-xs font-medium text-red-500 dark:text-red-400">Critical Items</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Filters Section -->
-    <section class="mt-8">
-      <div class="px-5 mb-4">
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white">Task Management</h2>
-        <p class="text-sm text-slate-500 dark:text-slate-400">Manage field operations and logistics.</p>
-      </div>
-
-      <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2 mb-4">
-        <button onclick="toggleModal()"
-          class="flex items-center gap-2 pl-3 pr-4 py-2.5 bg-brand-500 text-white rounded-xl shadow-lg shadow-brand-500/20 active:scale-95 transition-transform shrink-0">
-          <span class="material-symbols-outlined text-[20px]">add_circle</span>
-          <span class="text-sm font-semibold">New Task</span>
-        </button>
-        <button onclick="openIncident()"
-          class="flex items-center gap-2 pl-3 pr-4 py-2.5 bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl shadow-sm active:scale-95 transition-transform shrink-0">
-          <span class="material-symbols-outlined text-[20px] text-accent-red">emergency</span>
-          <span class="text-sm font-medium">Log Incident</span>
-        </button>
-        <button onclick="generateReport()"
-          class="flex items-center gap-2 pl-3 pr-4 py-2.5 bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl shadow-sm active:scale-95 transition-transform shrink-0">
-          <span class="material-symbols-outlined text-[20px] text-accent-purple">description</span>
-          <span class="text-sm font-medium">Report</span>
-        </button>
-      </div>
-
-      <div
-        class="sticky top-[73px] z-30 bg-bg-light/95 dark:bg-bg-dark/95 backdrop-blur-sm px-5 py-2 border-b border-slate-200 dark:border-slate-800/50 mb-4 transition-all">
-        <div class="flex items-center justify-between gap-2">
-          <div class="flex gap-2 overflow-x-auto no-scrollbar mask-gradient">
-            <button onclick="window.setFilter('all')"
-              class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-800 dark:bg-white text-white dark:text-slate-900 shadow-sm shrink-0">All</button>
-            <button onclick="window.setFilter('high')"
-              class="px-3 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shrink-0">High
-              Priority</button>
-            <button onclick="window.setFilter('crm')"
-              class="px-3 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shrink-0">CRM</button>
-            <button onclick="window.setFilter('automation')"
-              class="px-3 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shrink-0">Auto</button>
-          </div>
-          <div class="relative">
-            <button onclick="document.getElementById('sort-menu').classList.toggle('hidden')"
-              class="p-2 -mr-2 rounded-full text-slate-400 hover:text-brand-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-              <span class="material-symbols-outlined text-[24px]">sort</span>
-            </button>
-
-            <!-- Sort Menu -->
-            <div id="sort-menu"
-              class="hidden absolute right-0 top-10 w-56 bg-white dark:bg-surface-dark rounded-xl shadow-xl border border-slate-100 dark:border-slate-700 py-2 z-50">
-              <div class="px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">Sort By</div>
-              <button onclick="window.setSort('p-high'); document.getElementById('sort-menu').classList.add('hidden')"
-                class="w-full text-left px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-                <span class="material-symbols-outlined text-[18px] text-red-500">arrow_upward</span> Priority (High →
-                Low)
-              </button>
-              <button onclick="window.setSort('p-low'); document.getElementById('sort-menu').classList.add('hidden')"
-                class="w-full text-left px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-                <span class="material-symbols-outlined text-[18px] text-green-500">arrow_downward</span> Priority (Low →
-                High)
-              </button>
-              <button
-                onclick="window.setSort('prog-high'); document.getElementById('sort-menu').classList.add('hidden')"
-                class="w-full text-left px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
-                <span class="material-symbols-outlined text-[18px] text-blue-500">percent</span> Progress (High → Low)
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 px-5" id="task-list">
-        <!-- Tasks will flow here -->
-        <div class="text-center text-slate-500 py-10">Loading Tasks...</div>
-      </div>
-    </section>
-  </main>
-
-  <!-- ADD MODAL (Centered System Style) -->
-  <div id="add-modal"
-    class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 opacity-0 pointer-events-none transition-all duration-300 backdrop-blur-sm">
-    <div
-      class="bg-slate-900 w-full max-w-lg rounded-2xl p-6 shadow-2xl transform scale-95 transition-all duration-300 border border-slate-700 relative">
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-xl font-bold text-white flex items-center gap-2">
-          <span class="material-symbols-outlined text-brand-500">add_task</span> New Task
-        </h3>
-        <button onclick="toggleModal()"
-          class="text-slate-400 hover:text-white p-2 rounded-full hover:bg-slate-800 transition-colors">
-          <span class="material-symbols-outlined">close</span>
-        </button>
-      </div>
-
-      <div class="flex flex-col gap-5">
-        <!-- Task Title -->
-        <div>
-          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Task Title</label>
-          <input type="text" id="task-input"
-            class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-white placeholder-slate-500 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-lg shadow-inner transition-all"
-            placeholder="What needs to be done?">
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-          <!-- Priority -->
-          <div>
-            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Priority</label>
-            <div class="relative">
-              <select id="new-task-priority"
-                class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 pl-10 text-white focus:ring-brand-500 cursor-pointer appearance-none">
-                <option value="high">🔴 High (P0)</option>
-                <option value="medium">🟠 Medium (P1)</option>
-                <option value="low">🟢 Low (P2)</option>
-              </select>
-              <span
-                class="absolute left-3 top-3.5 material-symbols-outlined text-[20px] text-slate-400 pointer-events-none">flag</span>
-              <span
-                class="absolute right-3 top-3.5 material-symbols-outlined text-[20px] text-slate-400 pointer-events-none">expand_more</span>
-            </div>
-          </div>
-
-          <!-- Category -->
-          <div>
-            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Category</label>
-            <div class="relative">
-              <select id="new-task-category"
-                class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 pl-10 text-white focus:ring-brand-500 appearance-none cursor-pointer">
-                <option value="General">General</option>
-                <option value="CRM">CRM</option>
-                <option value="Automation">Automation</option>
-                <option value="Logistics">Logistics</option>
-                <option value="Fieldwork">Fieldwork</option>
-                <option value="Finance">Finance</option>
-                <option value="IT">IT Support</option>
-                <option value="Incident">Incident</option>
-              </select>
-              <span
-                class="absolute left-3 top-3.5 material-symbols-outlined text-[20px] text-slate-400 pointer-events-none">folder</span>
-              <span
-                class="absolute right-3 top-3.5 material-symbols-outlined text-[20px] text-slate-400 pointer-events-none">expand_more</span>
-            </div>
-          </div>
-        </div>
-
-        <button onclick="window.addTask(); toggleModal();"
-          class="w-full bg-brand-600 text-white font-bold py-4 rounded-xl mt-2 hover:bg-brand-500 hover:shadow-lg hover:shadow-brand-500/25 transition-all active:scale-95 text-lg flex items-center justify-center gap-2">
-          Create Task
+      <div class="flex items-center justify-end gap-2">
+        <button onclick="window.generateReport()"
+          class="flex items-center justify-center rounded-full size-10 bg-transparent text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+          <span class="material-symbols-outlined" style="font-size: 24px;">bar_chart</span>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- FLOATING BUTTON -->
-  <button onclick="toggleModal()"
-    class="fixed bottom-24 right-5 z-40 h-14 w-14 flex items-center justify-center rounded-full bg-slate-900 dark:bg-brand-600 text-white shadow-lg shadow-slate-900/30 dark:shadow-brand-600/40 hover:scale-105 active:scale-95 transition-all">
-    <span class="material-symbols-outlined text-[28px]">add</span>
-  </button>
+  <!-- Main Content Area -->
+  <div class="flex flex-col gap-6 px-4 py-4 w-full max-w-md mx-auto">
 
-  <!-- Navigation -->
-  <nav
-    class="fixed bottom-0 w-full z-50 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 pb-safe pt-2">
-    <div class="max-w-7xl mx-auto px-6 pb-4 pt-2">
-      <ul class="flex justify-between items-center">
-        <li><a class="flex flex-col items-center gap-1 text-brand-600 dark:text-brand-500" href="#"><span
-              class="material-symbols-outlined text-[24px] fill-1">dashboard</span><span
-              class="text-[10px] font-medium">Home</span></a></li>
-        <li><a class="flex flex-col items-center gap-1 text-slate-400" href="#"><span
-              class="material-symbols-outlined text-[24px]">folder</span><span
-              class="text-[10px] font-medium">Projects</span></a></li>
-        <li><a class="flex flex-col items-center gap-1 text-slate-400" href="#"><span
-              class="material-symbols-outlined text-[24px]">settings</span><span
-              class="text-[10px] font-medium">Settings</span></a></li>
-      </ul>
+    <!-- My Day Card -->
+    <div class="@container">
+      <div
+        class="flex flex-col items-stretch justify-start rounded-2xl shadow-lg bg-white dark:bg-card-dark overflow-hidden ring-1 ring-black/5 dark:ring-white/10">
+        <div class="w-full bg-center bg-no-repeat h-32 bg-cover relative"
+          style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDhlPMKa8pjMO50PY0yQusUu2nFNSm8tm7R2gLjx1lTEH3CduMEj60SfGGexKF6H3aQ95xhTNLBaRRRsU9w6nhSiMIvekk3EPr-jCeiCy6PFacwTAc43DyIgPQNNNppQj3rfWG4miRZHvAUbSir9dhno8Zep4iX8NtG6nKooQy8CcRYwHSRU3yDPCa6LUb9aEStqezOhbL5E9zhyu-08vv20ztDd9spdeh9StpR5brbK8XNSgdlqGCZvHg2LuEQju61XrFPZl30BT9n");'>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+          <div class="absolute bottom-3 left-4">
+            <p class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">My Day</p>
+          </div>
+        </div>
+        <div class="flex w-full grow flex-col gap-4 p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex flex-col">
+              <p class="text-text-secondary text-sm font-medium"><span id="pending-count">0</span> Tasks Remaining</p>
+              <p class="text-gray-800 dark:text-gray-200 text-sm font-medium mt-1 flex items-center gap-1">
+                <span class="material-symbols-outlined text-primary text-base">event</span>
+                Track your progress
+              </p>
+            </div>
+            <button
+              class="shrink-0 flex items-center justify-center rounded-lg h-9 px-4 bg-primary text-white text-sm font-bold shadow-md hover:bg-blue-600 transition-colors">
+              View Schedule
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-  </nav>
 
-  <!-- REPORT MODAL -->
-  <div id="report-modal"
-    class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+    <!-- Progress Overview -->
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg font-bold leading-tight tracking-[-0.015em]">Progress Overview</h3>
+      </div>
+      <div
+        class="rounded-2xl bg-white dark:bg-card-dark p-5 shadow-sm ring-1 ring-black/5 dark:ring-white/10 flex items-center justify-between gap-6">
+        <div class="relative size-24 shrink-0 rounded-full flex items-center justify-center transition-all"
+          id="chart-pie">
+          <div
+            class="absolute inset-2 bg-white dark:bg-card-dark rounded-full flex items-col justify-center items-center flex-col">
+            <span class="text-xs text-text-secondary font-medium">Done</span>
+            <span class="text-sm font-bold dark:text-white" id="stat-percent">0%</span>
+          </div>
+        </div>
+        <div class="flex-1 flex flex-col gap-3">
+          <div class="flex justify-between items-center">
+            <span class="text-sm text-text-secondary">Completed</span>
+            <span class="text-sm font-bold dark:text-white"><span id="stat-completed">0</span>/<span
+                id="stat-total">0</span></span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div class="w-full h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+              <div class="h-full bg-primary w-0 rounded-full transition-all duration-500" id="stat-bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tasks List -->
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg font-bold leading-tight tracking-[-0.015em]">Tasks</h3>
+        <div class="relative">
+          <button onclick="document.getElementById('sort-popover').classList.toggle('hidden')"
+            class="p-1 text-text-secondary hover:text-white">
+            <span class="material-symbols-outlined">tune</span>
+          </button>
+          <div id="sort-popover"
+            class="hidden absolute right-0 top-8 w-48 bg-card-dark border border-gray-700 rounded-lg shadow-xl z-50 p-2">
+            <div class="text-xs text-gray-500 mb-2 px-2">SORT BY</div>
+            <button onclick="window.setSort('p-high'); document.getElementById('sort-popover').classList.add('hidden')"
+              class="w-full text-left p-2 text-sm text-gray-300 hover:bg-white/10 rounded">Priority (High-Low)</button>
+            <button onclick="window.setSort('p-low'); document.getElementById('sort-popover').classList.add('hidden')"
+              class="w-full text-left p-2 text-sm text-gray-300 hover:bg-white/10 rounded">Priority (Low-High)</button>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col gap-3" id="task-list">
+        <!-- Tasks Injected by JS -->
+        <div class="text-center text-gray-500 py-10">Loading Your To Do List...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Floating Action Button -->
+  <div class="fixed bottom-24 right-4 z-30">
+    <button onclick="toggleModal()"
+      class="shadow-xl shadow-primary/30 flex items-center justify-center size-14 rounded-full bg-primary text-white hover:bg-blue-600 active:scale-95 transition-all">
+      <span class="material-symbols-outlined text-3xl">add</span>
+    </button>
+  </div>
+
+  <!-- ADD MODAL -->
+  <div id="add-modal"
+    class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 opacity-0 pointer-events-none transition-all duration-300 backdrop-blur-sm">
     <div
-      class="bg-surface-light dark:bg-surface-dark w-full max-w-md rounded-2xl p-6 shadow-2xl transform scale-95 transition-transform duration-300 border border-slate-700">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-xl font-bold dark:text-white">System Report</h3>
-        <button onclick="closeReport()" class="text-slate-400 hover:text-white"><span
+      class="bg-card-dark w-full max-w-lg rounded-2xl p-6 shadow-2xl transform scale-95 transition-all duration-300 border border-gray-700 relative">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">Add New Task</h3>
+        <button onclick="toggleModal()" class="text-gray-400 hover:text-white"><span
             class="material-symbols-outlined">close</span></button>
       </div>
-      <div id="report-content"
-        class="space-y-3 text-sm text-slate-600 dark:text-slate-300 mb-6 font-mono bg-slate-100 dark:bg-slate-800 p-4 rounded-lg">
-        <!-- Content Injected via JS -->
+      <div class="flex flex-col gap-5">
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Title</label>
+          <input type="text" id="task-input"
+            class="w-full bg-gray-800 border-gray-700 rounded-xl p-4 text-white focus:ring-primary focus:border-primary">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Priority</label>
+            <select id="new-task-priority" class="w-full bg-gray-800 border-gray-700 rounded-xl p-3 text-white">
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Category</label>
+            <select id="new-task-category" class="w-full bg-gray-800 border-gray-700 rounded-xl p-3 text-white">
+              <option value="General">General</option>
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Health">Health</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="window.addTask(); toggleModal();"
+          class="w-full bg-primary text-white font-bold py-4 rounded-xl mt-2 hover:bg-blue-600">Add Task</button>
       </div>
-      <button onclick="window.copyReport()"
-        class="w-full bg-brand-600 text-white font-bold py-3 rounded-xl hover:bg-brand-500 flex items-center justify-center gap-2">
-        <span class="material-symbols-outlined">content_copy</span> Copy to Clipboard
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div
+    class="fixed bottom-0 left-0 w-full z-40 bg-white/90 dark:bg-background-dark/95 backdrop-blur-lg border-t border-gray-200 dark:border-gray-800 pb-safe">
+    <div class="flex justify-around items-center h-16 max-w-md mx-auto">
+      <button class="flex flex-col items-center justify-center gap-1 w-16 text-primary">
+        <span class="material-symbols-outlined filled">check_circle</span>
+        <span class="text-[10px] font-medium">To Do</span>
+      </button>
+      <button class="flex flex-col items-center justify-center gap-1 w-16 text-gray-400 hover:text-white">
+        <span class="material-symbols-outlined">calendar_month</span>
+        <span class="text-[10px] font-medium">Calendar</span>
+      </button>
+      <button class="flex flex-col items-center justify-center gap-1 w-16 text-gray-400 hover:text-white">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="text-[10px] font-medium">Settings</span>
       </button>
     </div>
   </div>
 
   <script>
-    function toggleModal(priority, category) {
-      const modal = document.getElementById('add-modal');
-      modal.classList.toggle('open');
+    // Utils
+    document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
 
-      if (modal.classList.contains('open')) {
-        document.getElementById('task-input').focus();
-
-        // Pre-fill if args provided
-        if (priority) document.getElementById('new-task-priority').value = priority;
-        if (category) document.getElementById('new-task-category').value = category;
-      } else {
-        // Reset defaults on close
-        setTimeout(() => {
-          document.getElementById('new-task-priority').value = 'high';
-          document.getElementById('new-task-category').value = '';
-        }, 200);
-      }
+    function toggleModal() {
+      const m = document.getElementById('add-modal');
+      m.classList.toggle('open');
+      if (m.classList.contains('open')) document.getElementById('task-input').focus();
     }
 
-    function openIncident() {
-      toggleModal('high', 'Incident');
-    }
-
-    function generateReport() {
-      const modal = document.getElementById('report-modal');
-      const content = document.getElementById('report-content');
-
-      // Calculate Stats
-      const total = tasks.length;
-      const completed = tasks.filter(t => t.progress === 100).length;
-      const pending = total - completed;
-      const high = tasks.filter(t => t.priority === 'high' && t.progress < 100).length;
-
-      // Generate Text
-      const text = `
-<strong>OneSystem Status Report</strong><br>
-------------------------<br>
-Tasks Total: ${total}<br>
-Completed: ${completed} (${Math.round((completed / total) * 100 || 0)}%)<br>
-Pending: ${pending}<br>
-Critical (P0): ${high}<br>
-------------------------<br>
-Generated: ${new Date().toLocaleTimeString()}
-        `.trim();
-
-      content.innerHTML = text;
-      modal.classList.remove('opacity-0', 'pointer-events-none');
-      modal.querySelector('div').classList.remove('scale-95');
-      modal.querySelector('div').classList.add('scale-100');
-    }
-
-    function closeReport() {
-      const modal = document.getElementById('report-modal');
-      modal.classList.add('opacity-0', 'pointer-events-none');
-      modal.querySelector('div').classList.add('scale-95');
-      modal.querySelector('div').classList.remove('scale-100');
-    }
-
-    window.copyReport = function () {
-      const text = document.getElementById('report-content').innerText;
-      navigator.clipboard.writeText(text).then(() => alert('Report copied to clipboard!'));
-    };
-  </script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js')
-        .then(() => console.log('Service Worker Registered'))
-        .catch(e => console.log('SW Registration Failed', e));
-    }
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
   </script>
   <script src="app.js"></script>
 </body>

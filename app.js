@@ -445,179 +445,92 @@ window.setSort = function (sortVal) {
 
 // RENDER
 window.render = function () {
-  // Stats
+  // Stats Calculation
   const total = tasks.length;
-  let totalP = 0;
-  tasks.forEach(t => totalP += (t.progress || 0));
-  const global = total === 0 ? 0 : Math.round(totalP / total);
-  const p0 = tasks.filter(t => t.priority === 'high' && (t.progress || 0) < 100).length;
+  const completed = tasks.filter(t => t.progress === 100).length;
+  const pending = total - completed;
+  const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
 
-  if (document.getElementById('global-stat')) document.getElementById('global-stat').textContent = `${global}%`;
-  if (document.getElementById('p0-stat')) document.getElementById('p0-stat').textContent = p0;
-
-  // Filter
-  // Filter
-  let filtered = tasks;
-  if (currentFilter === 'high') {
-    filtered = tasks.filter(t => t.priority === 'high');
-  } else if (currentFilter !== 'all') {
-    // Generic category filter (case insensitive)
-    filtered = tasks.filter(t => (t.category || '').toLowerCase() === currentFilter.toLowerCase());
+  // Update UI Stats
+  if (document.getElementById('pending-count')) document.getElementById('pending-count').innerText = pending;
+  if (document.getElementById('stat-completed')) document.getElementById('stat-completed').innerText = completed;
+  if (document.getElementById('stat-total')) document.getElementById('stat-total').innerText = total;
+  if (document.getElementById('stat-percent')) document.getElementById('stat-percent').innerText = percent + '%';
+  if (document.getElementById('stat-bar')) document.getElementById('stat-bar').style.width = percent + '%';
+  if (document.getElementById('chart-pie')) {
+    document.getElementById('chart-pie').style.background = `conic-gradient(#2b6cee ${percent}%, #232f48 0)`;
   }
 
-  // Sort
-  if (currentSort !== 'default') {
-    filtered.sort((a, b) => {
-      if (currentSort === 'p-high') {
-        const pMap = { high: 3, medium: 2, low: 1 };
-        return pMap[b.priority] - pMap[a.priority];
-      }
-      if (currentSort === 'p-low') {
-        const pMap = { high: 3, medium: 2, low: 1 };
-        return pMap[a.priority] - pMap[b.priority];
-      }
-      if (currentSort === 'prog-high') { return (b.progress || 0) - (a.progress || 0); }
-      if (currentSort === 'prog-low') { return (a.progress || 0) - (b.progress || 0); }
-      return 0;
-    });
+  // Filter & Sort
+  let filtered = tasks;
+  if (currentSort === 'p-high') {
+    const val = { high: 3, medium: 2, low: 1 };
+    filtered.sort((a, b) => val[b.priority] - val[a.priority]);
+  } else if (currentSort === 'p-low') {
+    const val = { high: 3, medium: 2, low: 1 };
+    filtered.sort((a, b) => val[a.priority] - val[b.priority]);
   }
 
   const list = document.getElementById('task-list');
   list.innerHTML = '';
 
   if (filtered.length === 0) {
-    list.innerHTML = `<div style="text-align:center; color:#64748b; padding:20px;">No tasks found.</div>`;
+    list.innerHTML = `<div class="text-center text-gray-500 py-10">No tasks found. Get started!</div>`;
     return;
   }
 
+  // Helper Maps
+  const colorMap = { high: 'bg-red-500', medium: 'bg-yellow-500', low: 'bg-blue-400' };
+  const textMap = { high: 'text-red-500', medium: 'text-yellow-500', low: 'text-blue-400' };
+  const bgMap = { high: 'bg-red-500/10', medium: 'bg-yellow-500/10', low: 'bg-blue-400/10' };
+
+  const iconMap = {
+    'Personal': 'person', 'Work': 'work', 'Health': 'fitness_center', 'General': 'folder',
+    'gym': 'fitness_center', 'food': 'restaurant' // support some legacy/loose tags
+  };
+
   filtered.forEach(task => {
-    if (task.isVisible === undefined) task.isVisible = true;
-
-    const progress = task.progress || 0;
-    const isDone = progress === 100;
-    const isHidden = !task.isVisible;
-
-    const r = 18; const c = 2 * Math.PI * r; const offset = c - (progress / 100) * c;
-    const ringColor = isDone ? 'var(--success)' : 'var(--primary)';
-
-    // LOGS HTML
-    if (!task.logs) task.logs = [];
-    let logsHtml = '';
-    if (task.logs.length > 0) {
-      logsHtml = task.logs.map(log => `
-           <div class="log-entry-card">
-              <div class="log-entry-header">
-                 <span class="log-date">${log.date}</span>
-                 <span class="log-time">${log.time}</span>
-              </div>
-              <div class="log-entry-body">${escapeHtml(log.text)}</div>
-           </div>
-         `).join('');
-    } else {
-      logsHtml = `<div style="text-align:center; color:#475569; font-size:0.8rem; padding:10px;">No updates yet.</div>`;
-    }
-
-    const borderColors = { high: 'border-l-accent-red', medium: 'border-l-accent-orange', low: 'border-l-accent-green' };
-    const bgColors = {
-      high: 'bg-red-600 text-white shadow-sm shadow-red-500/30',
-      medium: 'bg-orange-500 text-white shadow-sm shadow-orange-500/30',
-      low: 'bg-green-500 text-white shadow-sm shadow-green-500/30'
-    };
+    const isDone = (task.progress === 100);
+    const pColor = colorMap[task.priority] || 'bg-gray-400';
+    const pText = textMap[task.priority] || 'text-gray-400';
+    const pBg = bgMap[task.priority] || 'bg-gray-400/10';
+    const icon = iconMap[task.category] || 'folder';
 
     const html = `
-    <div class="group bg-surface-light dark:bg-surface-dark rounded-xl p-4 shadow-card hover:shadow-md transition-all border-l-4 ${borderColors[task.priority] || 'border-l-slate-400'} relative overflow-hidden mb-3" id="card-${task.id}">
-        <!-- Main Row -->
-        <div class="flex justify-between items-start mb-2 cursor-pointer" onclick="window.toggleExpand('${task.id}')">
-            <div class="flex flex-col">
-                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1" 
-                      contenteditable="true" onblur="window.updateCategory('${task.id}', this)" onclick="event.stopPropagation()">
-                      ${task.category || 'General'}
-                </span>
-                <h3 class="text-base font-bold text-slate-800 dark:text-white leading-tight ${isDone ? 'line-through opacity-50' : ''}"
-                    contenteditable="true" onblur="window.updateTitle('${task.id}', this)" onclick="event.stopPropagation()">
-                    ${escapeHtml(task.title)}
-                </h3>
+    <!-- Task Item -->
+    <div class="group relative flex flex-col gap-2 p-4 rounded-xl bg-white dark:bg-card-dark shadow-sm ring-1 ring-black/5 dark:ring-white/10 overflow-hidden transition-all active:scale-[0.98] ${isDone ? 'opacity-60' : ''}" onclick="window.toggleExpand('${task.id}')">
+        
+        <!-- Priority Strip -->
+        <div class="absolute left-0 top-0 bottom-0 w-1 ${pColor}"></div>
+        
+        <div class="flex items-center gap-4">
+            <div class="flex-shrink-0" onclick="event.stopPropagation(); window.toggleDone('${task.id}')">
+                <div class="w-6 h-6 rounded-full border-2 ${isDone ? 'border-primary bg-primary' : 'border-gray-300 dark:border-gray-600'} flex items-center justify-center cursor-pointer hover:border-primary transition-colors">
+                    ${isDone ? '<span class="material-symbols-outlined text-white text-sm">check</span>' : ''}
+                </div>
             </div>
             
-            <button class="w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isDone ? 'text-brand-500 bg-brand-50/10' : 'text-slate-300 hover:text-brand-500 hover:bg-slate-50 dark:hover:bg-slate-700'}"
-                    onclick="event.stopPropagation(); window.toggleExpand('${task.id}')">
-                 <span class="material-symbols-outlined text-[20px]">${isDone ? 'check_circle' : 'radio_button_unchecked'}</span>
-            </button>
-        </div>
-
-        <!-- Meta Row -->
-        <div class="flex items-center justify-between pt-3 border-t border-slate-50 dark:border-slate-700/50">
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-1.5 px-2 py-1 rounded-md ${bgColors[task.priority] || 'bg-slate-100 dark:bg-slate-800'}" onclick="window.cyclePriority(event, '${task.id}')">
-                    <span class="material-symbols-outlined text-[14px] fill-1">flag</span>
-                    <span class="text-[10px] font-bold uppercase">${task.priority}</span>
+            <div class="flex-1 min-w-0">
+                <h4 class="text-base font-semibold text-gray-900 dark:text-white truncate ${isDone ? 'line-through text-gray-500' : ''}">${escapeHtml(task.title)}</h4>
+                <div class="flex items-center gap-2 mt-0.5">
+                    <span class="text-xs ${pText} font-medium ${pBg} px-1.5 py-0.5 rounded uppercase">${task.priority}</span>
+                    <span class="text-xs text-text-secondary">${task.category}</span>
                 </div>
-                <!-- Visiblity Toggle -->
-                <button onclick="window.toggleVisibility(event, '${task.id}')" class="text-slate-400 hover:text-brand-500">
-                    <span class="material-symbols-outlined text-[16px]">${isHidden ? 'visibility_off' : 'visibility'}</span>
-                </button>
-                ${isHidden ? '<span class="text-[10px] text-slate-500 uppercase">Hidden</span>' : ''}
             </div>
-            <div class="flex items-center gap-2">
-                 <span class="text-xs font-bold ${isDone ? 'text-brand-500' : 'text-slate-500'}">${progress}%</span>
-                 <button class="text-slate-400 hover:text-red-500" onclick="window.deleteTask(event, '${task.id}')">
-                    <span class="material-symbols-outlined text-[18px]">delete</span>
-                 </button>
+            
+            <div class="flex items-center gap-2 shrink-0">
+                <div class="size-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                    <span class="material-symbols-outlined text-lg">${icon}</span>
+                </div>
             </div>
         </div>
-
-        <!-- Expanded Content (Hidden by default logic handled by display:none via class logic if needed, but here we render it and let CSS toggle it? No, old app.js used .card-expanded. We need Tailwind equivalent) -->
-        <div class="card-expanded mt-4 pt-3 border-t border-dashed border-slate-700" style="display:none;" id="expand-${task.id}">
-             <!-- Edit Details Row -->
-             <div class="grid grid-cols-2 gap-3 mb-4">
-                <div class="relative">
-                    <label class="block text-[10px] uppercase text-slate-500 font-bold mb-1">Priority</label>
-                    <select onchange="window.setPriority('${task.id}', this.value)" class="w-full bg-slate-800 text-xs text-white rounded p-1.5 border border-slate-700">
-                        <option value="high" ${task.priority === 'high' ? 'selected' : ''}>High (P0)</option>
-                        <option value="medium" ${task.priority === 'medium' ? 'selected' : ''}>Medium (P1)</option>
-                        <option value="low" ${task.priority === 'low' ? 'selected' : ''}>Low (P2)</option>
-                    </select>
-                </div>
-                <div class="relative">
-                    <label class="block text-[10px] uppercase text-slate-500 font-bold mb-1">Category</label>
-                    <select onchange="window.updateCategory('${task.id}', this.value)" class="w-full bg-slate-800 text-xs text-white rounded p-1.5 border border-slate-700">
-                        <option value="General" ${task.category === 'General' ? 'selected' : ''}>General</option>
-                        <option value="CRM" ${task.category === 'CRM' ? 'selected' : ''}>CRM</option>
-                        <option value="Automation" ${task.category === 'Automation' ? 'selected' : ''}>Automation</option>
-                        <option value="Logistics" ${task.category === 'Logistics' ? 'selected' : ''}>Logistics</option>
-                        <option value="Fieldwork" ${task.category === 'Fieldwork' ? 'selected' : ''}>Fieldwork</option>
-                        <option value="Finance" ${task.category === 'Finance' ? 'selected' : ''}>Finance</option>
-                        <option value="IT" ${task.category === 'IT' ? 'selected' : ''}>IT Support</option>
-                        <option value="Incident" ${task.category === 'Incident' ? 'selected' : ''}>Incident</option>
-                    </select>
-                </div>
+        
+        <!-- Expanded Details (Hidden by default, shown via toggle) -->
+         <div class="mt-3 pt-3 border-t border-gray-700/50 hidden" id="expand-${task.id}">
+             <div class="flex gap-2">
+                 <button onclick="window.deleteTask(event, '${task.id}')" class="text-xs text-red-400 flex items-center gap-1 hover:text-red-300"><span class="material-symbols-outlined text-sm">delete</span> Delete</button>
              </div>
-
-             <!-- Progress Control -->
-             <div class="flex items-center gap-2 mb-3">
-                <input type="range" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer" min="0" max="100" value="${progress}"
-                       oninput="this.nextElementSibling.innerText = this.value + '%'"
-                       onchange="window.updateProgress('${task.id}', this.value)">
-                <span class="text-xs w-8 text-right font-mono">${progress}%</span>
-             </div>
-             
-             <!-- Log Input -->
-             <div class="flex gap-2 mb-3">
-                <input type="text" class="flex-1 bg-slate-800 border-none rounded text-xs p-2 text-white" placeholder="Add update..."
-                       onkeydown="if(event.key === 'Enter') window.addLog('${task.id}', this)">
-                <button class="bg-brand-600 text-white text-xs px-3 rounded" onclick="window.addLog('${task.id}', this.previousElementSibling)">Log</button>
-             </div>
-
-             <!-- Logs Feed -->
-             <div class="flex flex-col gap-2 max-h-32 overflow-y-auto no-scrollbar">
-                ${task.logs && task.logs.length > 0 ? task.logs.map(log => `
-                   <div class="text-[11px] text-slate-400 border-l-2 border-slate-700 pl-2">
-                      <div class="flex justify-between"><span class="text-slate-500">${log.date}</span></div>
-                      <div class="text-slate-300">${escapeHtml(log.text)}</div>
-                   </div>
-                `).join('') : '<div class="text-center text-xs text-slate-600">No logs yet.</div>'}
-             </div>
-        </div>
+         </div>
     </div>
     `;
     list.insertAdjacentHTML('beforeend', html);
@@ -654,4 +567,19 @@ function formatDate(d) {
 }
 
 // Start
+// Helpers for New UI
+window.toggleExpand = function (id) {
+  const el = document.getElementById(`expand-${id}`);
+  if (el) el.classList.toggle('hidden');
+};
+
+window.toggleDone = function (id) {
+  const task = tasks.find(t => t.id === id);
+  if (task) {
+    task.progress = (task.progress === 100) ? 0 : 100;
+    window.save();
+    window.render();
+  }
+};
+
 window.init();
