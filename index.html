@@ -60,16 +60,20 @@
 
     /* Modal Styles */
     #add-modal {
-      transition: opacity 0.2s, transform 0.2s;
-      pointer-events: none;
-      opacity: 0;
-      transform: translateY(20px) scale(0.95);
+      transition: opacity 0.2s;
     }
 
     #add-modal.open {
       pointer-events: auto;
       opacity: 1;
-      transform: translateY(0) scale(1);
+    }
+
+    #add-modal.open>div {
+      transform: scale(1);
+    }
+
+    opacity: 1;
+    transform: translateY(0) scale(1);
     }
   </style>
 </head>
@@ -199,23 +203,77 @@
     </section>
   </main>
 
-  <!-- ADD MODAL (Hidden by default) -->
+  <!-- ADD MODAL (Centered System Style) -->
   <div id="add-modal"
-    class="fixed inset-x-0 bottom-24 mx-5 p-4 rounded-xl bg-surface-dark border border-slate-700 shadow-2xl z-50 flex flex-col gap-3">
-    <input type="text" id="task-input"
-      class="w-full bg-slate-800 border-none rounded-lg p-3 text-white placeholder-slate-500 focus:ring-2 focus:ring-brand-500"
-      placeholder="What needs to be done?">
-    <div class="flex gap-2">
-      <select id="new-task-priority" class="bg-slate-800 text-slate-300 text-sm rounded-lg border-none p-2 flex-1">
-        <option value="high">High Priority</option>
-        <option value="medium">Medium</option>
-        <option value="low">Low</option>
-      </select>
-      <input type="text" id="new-task-category"
-        class="bg-slate-800 text-slate-300 text-sm rounded-lg border-none p-2 flex-1" placeholder="Category">
+    class="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 opacity-0 pointer-events-none transition-all duration-300 backdrop-blur-sm">
+    <div
+      class="bg-slate-900 w-full max-w-lg rounded-2xl p-6 shadow-2xl transform scale-95 transition-all duration-300 border border-slate-700 relative">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+          <span class="material-symbols-outlined text-brand-500">add_task</span> New Task
+        </h3>
+        <button onclick="toggleModal()"
+          class="text-slate-400 hover:text-white p-2 rounded-full hover:bg-slate-800 transition-colors">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-5">
+        <!-- Task Title -->
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Task Title</label>
+          <input type="text" id="task-input"
+            class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-white placeholder-slate-500 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-lg shadow-inner transition-all"
+            placeholder="What needs to be done?">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Priority -->
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Priority</label>
+            <div class="relative">
+              <select id="new-task-priority"
+                class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 pl-10 text-white focus:ring-brand-500 cursor-pointer appearance-none">
+                <option value="high">🔴 High (P0)</option>
+                <option value="medium">🟠 Medium (P1)</option>
+                <option value="low">🟢 Low (P2)</option>
+              </select>
+              <span
+                class="absolute left-3 top-3.5 material-symbols-outlined text-[20px] text-slate-400 pointer-events-none">flag</span>
+              <span
+                class="absolute right-3 top-3.5 material-symbols-outlined text-[20px] text-slate-400 pointer-events-none">expand_more</span>
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Category</label>
+            <div class="relative">
+              <select id="new-task-category"
+                class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 pl-10 text-white focus:ring-brand-500 appearance-none cursor-pointer">
+                <option value="General">General</option>
+                <option value="CRM">CRM</option>
+                <option value="Automation">Automation</option>
+                <option value="Logistics">Logistics</option>
+                <option value="Fieldwork">Fieldwork</option>
+                <option value="Finance">Finance</option>
+                <option value="IT">IT Support</option>
+                <option value="Incident">Incident</option>
+              </select>
+              <span
+                class="absolute left-3 top-3.5 material-symbols-outlined text-[20px] text-slate-400 pointer-events-none">folder</span>
+              <span
+                class="absolute right-3 top-3.5 material-symbols-outlined text-[20px] text-slate-400 pointer-events-none">expand_more</span>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="window.addTask(); toggleModal();"
+          class="w-full bg-brand-600 text-white font-bold py-4 rounded-xl mt-2 hover:bg-brand-500 hover:shadow-lg hover:shadow-brand-500/25 transition-all active:scale-95 text-lg flex items-center justify-center gap-2">
+          Create Task
+        </button>
+      </div>
     </div>
-    <button onclick="window.addTask(); toggleModal();"
-      class="w-full bg-brand-600 text-white font-bold py-2 rounded-lg mt-1 hover:bg-brand-500">Create Task</button>
   </div>
 
   <!-- FLOATING BUTTON -->

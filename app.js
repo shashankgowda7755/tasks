@@ -502,7 +502,11 @@ window.render = function () {
     }
 
     const borderColors = { high: 'border-l-accent-red', medium: 'border-l-accent-orange', low: 'border-l-accent-green' };
-    const bgColors = { high: 'bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400', medium: 'bg-orange-50 dark:bg-orange-900/10 text-orange-600 dark:text-orange-400', low: 'bg-green-50 dark:bg-green-900/10 text-green-600 dark:text-green-400' };
+    const bgColors = {
+      high: 'bg-red-600 text-white shadow-sm shadow-red-500/30',
+      medium: 'bg-orange-500 text-white shadow-sm shadow-orange-500/30',
+      low: 'bg-green-500 text-white shadow-sm shadow-green-500/30'
+    };
 
     const html = `
     <div class="group bg-surface-light dark:bg-surface-dark rounded-xl p-4 shadow-card hover:shadow-md transition-all border-l-4 ${borderColors[task.priority] || 'border-l-slate-400'} relative overflow-hidden mb-3" id="card-${task.id}">
