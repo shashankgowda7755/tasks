@@ -501,77 +501,121 @@ window.render = function () {
       logsHtml = `<div style="text-align:center; color:#475569; font-size:0.8rem; padding:10px;">No updates yet.</div>`;
     }
 
+    const borderColors = { high: 'border-l-accent-red', medium: 'border-l-accent-orange', low: 'border-l-accent-green' };
+    const bgColors = { high: 'bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400', medium: 'bg-orange-50 dark:bg-orange-900/10 text-orange-600 dark:text-orange-400', low: 'bg-green-50 dark:bg-green-900/10 text-green-600 dark:text-green-400' };
+
     const html = `
-      <div class="task-card ${isHidden ? 'task-hidden' : ''}" id="card-${task.id}" style="${isHidden ? 'opacity:0.6;' : ''}">
-        <div class="card-main" onclick="window.toggleExpand('${task.id}')">
-          <div class="status-ring">
-            <svg class="ring-svg" viewBox="0 0 40 40">
-               <circle class="ring-bg" cx="20" cy="20" r="${r}" stroke-width="3" fill="none"></circle>
-               <circle class="ring-fg" cx="20" cy="20" r="${r}" stroke-width="3" fill="none"
-                       style="stroke-dasharray: ${c}; stroke-dashoffset: ${offset}; stroke: ${ringColor}"></circle>
-            </svg>
-            <span class="percent-text" style="color:${isDone ? 'var(--success)' : '#94a3b8'}">${progress}%</span>
-          </div>
-          <div class="card-info">
-             <div class="card-title ${isDone ? 'done' : ''}">
-                <span contenteditable="true" 
-                      onblur="window.updateTitle('${task.id}', this)"
-                      onclick="event.stopPropagation()"
-                      style="cursor:text; outline:none; border-bottom:1px dashed #475569;">${escapeHtml(task.title)}</span>
-                <span class="tag" contenteditable="true" 
-                      onblur="window.updateCategory('${task.id}', this)"
-                      onclick="event.stopPropagation()"
-                      title="Click to edit category"
-                      style="cursor:text;">${task.category || 'Gen'}</span>
-                ${isHidden ? '<span class="tag" style="background:#475569; color:white;">HIDDEN</span>' : ''}
-             </div>
-             <div class="card-meta">
-               <span class="priority-badge p-${task.priority}" 
-                     onclick="window.cyclePriority(event, '${task.id}')"
-                     title="Click Priority">
-                     ${getPriorityLabel(task.priority)}
-               </span>
-               <span class="date-meta">Captured: ${formatDate(task.createdAt || Date.now())}</span>
-               <button class="icon-action-btn" onclick="window.toggleVisibility(event, '${task.id}')" title="Toggle Visibility" style="margin-left:8px; background:none; border:none; color:#64748b; cursor:pointer;">
-                  ${isHidden ?
-        `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>` :
-        `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`
-      }
-               </button>
-             </div>
-          </div>
-          <button class="delete-icon-btn" onclick="window.deleteTask(event, '${task.id}')">${ICONS.trash}</button>
+    <div class="group bg-surface-light dark:bg-surface-dark rounded-xl p-4 shadow-card hover:shadow-md transition-all border-l-4 ${borderColors[task.priority] || 'border-l-slate-400'} relative overflow-hidden mb-3" id="card-${task.id}">
+        <!-- Main Row -->
+        <div class="flex justify-between items-start mb-2 cursor-pointer" onclick="window.toggleExpand('${task.id}')">
+            <div class="flex flex-col">
+                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1" 
+                      contenteditable="true" onblur="window.updateCategory('${task.id}', this)" onclick="event.stopPropagation()">
+                      ${task.category || 'General'}
+                </span>
+                <h3 class="text-base font-bold text-slate-800 dark:text-white leading-tight ${isDone ? 'line-through opacity-50' : ''}"
+                    contenteditable="true" onblur="window.updateTitle('${task.id}', this)" onclick="event.stopPropagation()">
+                    ${escapeHtml(task.title)}
+                </h3>
+            </div>
+            
+            <button class="w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isDone ? 'text-brand-500 bg-brand-50/10' : 'text-slate-300 hover:text-brand-500 hover:bg-slate-50 dark:hover:bg-slate-700'}"
+                    onclick="event.stopPropagation(); window.toggleExpand('${task.id}')">
+                 <span class="material-symbols-outlined text-[20px]">${isDone ? 'check_circle' : 'radio_button_unchecked'}</span>
+            </button>
         </div>
-        
-        <div class="card-expanded">
-           <div class="control-row">
-              <label style="color:#94a3b8; font-size:0.8rem; margin-bottom:4px; display:block;">Progress: ${progress}%</label>
-              <input type="range" min="0" max="100" value="${progress}" 
-                     oninput="document.getElementById('val-${task.id}').textContent = this.value + '%'"
-                     onchange="window.updateProgress('${task.id}', this.value)">
-              <span id="val-${task.id}" style="display:none">${progress}%</span>
-           </div>
-           
-           <div class="actions-grid">
-              <button class="action-chip" onclick="window.addProgress('${task.id}', 10)">+10%</button>
-              <button class="action-chip" onclick="window.addProgress('${task.id}', 25)">+25%</button>
-              <button class="action-chip done-btn" onclick="window.updateProgress('${task.id}', 100)">Mark Complete</button>
-           </div>
-           
-           <div class="log-group">
-             <textarea class="log-input" placeholder="Type a new update... (Supports multiple paragraphs)"
-                       onkeydown="if(event.key === 'Enter' && (event.metaKey || event.ctrlKey)) window.addLog('${task.id}', this)"></textarea>
-             <div class="log-submit-row">
-                <button class="log-btn" onclick="window.submitLog(event, '${task.id}')">Add Update</button>
-             </div>
-           </div>
-           
-           <div class="log-feed">
-              ${logsHtml}
-           </div>
+
+        <!-- Meta Row -->
+        <div class="flex items-center justify-between pt-3 border-t border-slate-50 dark:border-slate-700/50">
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1.5 px-2 py-1 rounded-md ${bgColors[task.priority] || 'bg-slate-100 dark:bg-slate-800'}" onclick="window.cyclePriority(event, '${task.id}')">
+                    <span class="material-symbols-outlined text-[14px] fill-1">flag</span>
+                    <span class="text-[10px] font-bold uppercase">${task.priority}</span>
+                </div>
+                <!-- Visiblity Toggle -->
+                <button onclick="window.toggleVisibility(event, '${task.id}')" class="text-slate-400 hover:text-brand-500">
+                    <span class="material-symbols-outlined text-[16px]">${isHidden ? 'visibility_off' : 'visibility'}</span>
+                </button>
+                ${isHidden ? '<span class="text-[10px] text-slate-500 uppercase">Hidden</span>' : ''}
+            </div>
+            <div class="flex items-center gap-2">
+                 <span class="text-xs font-bold ${isDone ? 'text-brand-500' : 'text-slate-500'}">${progress}%</span>
+                 <button class="text-slate-400 hover:text-red-500" onclick="window.deleteTask(event, '${task.id}')">
+                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                 </button>
+            </div>
         </div>
-      </div>
-      `;
+
+        <!-- Expanded Content (Hidden by default logic handled by display:none via class logic if needed, but here we render it and let CSS toggle it? No, old app.js used .card-expanded. We need Tailwind equivalent) -->
+        <div class="card-expanded mt-4 pt-3 border-t border-dashed border-slate-700" style="display:none;" id="expand-${task.id}">
+             <!-- Progress Control -->
+             <div class="flex items-center gap-2 mb-3">
+                <input type="range" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer" min="0" max="100" value="${progress}"
+                       oninput="this.nextElementSibling.innerText = this.value + '%'"
+                       onchange="window.updateProgress('${task.id}', this.value)">
+                <span class="text-xs w-8 text-right font-mono">${progress}%</span>
+             </div>
+             
+             <!-- Log Input -->
+             <div class="flex gap-2 mb-3">
+                <input type="text" class="flex-1 bg-slate-800 border-none rounded text-xs p-2 text-white" placeholder="Add update..."
+                       onkeydown="if(event.key === 'Enter') window.addLog('${task.id}', this)">
+                <button class="bg-brand-600 text-white text-xs px-3 rounded" onclick="window.addLog('${task.id}', this.previousElementSibling)">Log</button>
+             </div>
+
+             <!-- Logs Feed -->
+             <div class="flex flex-col gap-2 max-h-32 overflow-y-auto no-scrollbar">
+                ${task.logs && task.logs.length > 0 ? task.logs.map(log => `
+                   <div class="text-[11px] text-slate-400 border-l-2 border-slate-700 pl-2">
+                      <div class="flex justify-between"><span class="text-slate-500">${log.date}</span></div>
+                      <div class="text-slate-300">${escapeHtml(log.text)}</div>
+                   </div>
+                `).join('') : '<div class="text-center text-xs text-slate-600">No logs yet.</div>'}
+             </div>
+        </div>
+    </div>
+    `;
+    list.insertAdjacentHTML('beforeend', html);
+  });
+};
+
+// Override toggleExpand to work with Tailwind structure
+window.toggleExpand = function (id) {
+  const el = document.getElementById(`expand-${id}`);
+  if (el) {
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+};
+
+<div class="card-expanded">
+  <div class="control-row">
+    <label style="color:#94a3b8; font-size:0.8rem; margin-bottom:4px; display:block;">Progress: ${progress}%</label>
+    <input type="range" min="0" max="100" value="${progress}"
+      oninput="document.getElementById('val-${task.id}').textContent = this.value + '%'"
+      onchange="window.updateProgress('${task.id}', this.value)">
+      <span id="val-${task.id}" style="display:none">${progress}%</span>
+  </div>
+
+  <div class="actions-grid">
+    <button class="action-chip" onclick="window.addProgress('${task.id}', 10)">+10%</button>
+    <button class="action-chip" onclick="window.addProgress('${task.id}', 25)">+25%</button>
+    <button class="action-chip done-btn" onclick="window.updateProgress('${task.id}', 100)">Mark Complete</button>
+  </div>
+
+  <div class="log-group">
+    <textarea class="log-input" placeholder="Type a new update... (Supports multiple paragraphs)"
+      onkeydown="if(event.key === 'Enter' && (event.metaKey || event.ctrlKey)) window.addLog('${task.id}', this)"></textarea>
+    <div class="log-submit-row">
+      <button class="log-btn" onclick="window.submitLog(event, '${task.id}')">Add Update</button>
+    </div>
+  </div>
+
+  <div class="log-feed">
+    ${logsHtml}
+  </div>
+</div>
+      </div >
+  `;
     list.insertAdjacentHTML('beforeend', html);
   });
 };

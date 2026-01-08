@@ -1,94 +1,234 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
   <title>OneSystem OS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/192/task.png">
+
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: "#3b82f6", 600: "#2563eb" },
+            accent: { orange: "#f97316", red: "#ef4444", green: "#22c55e", purple: "#a855f7" },
+            surface: { light: "#ffffff", dark: "#1e293b", darker: "#0f172a" },
+            bg: { light: "#f1f5f9", dark: "#020617" }
+          },
+          fontFamily: { sans: ["Inter", "sans-serif"] },
+          boxShadow: {
+            'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+            'card': '0 0 0 1px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.05)'
+          }
+        },
+      },
+    }
+  </script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    body {
+      min-height: max(884px, 100dvh);
+    }
+
+    .mask-gradient {
+      -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    }
+
+    /* Modal Styles */
+    #add-modal {
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+    }
+
+    #add-modal.open {
+      pointer-events: auto;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  </style>
 </head>
 
-<body>
+<body
+  class="bg-bg-light dark:bg-bg-dark text-slate-800 dark:text-slate-100 font-sans antialiased overflow-x-hidden min-h-screen relative pb-24">
 
-  <div class="app-container">
-    <header>
-      <h1>OneSystem OS</h1>
-      <p class="subtitle">Operating System for NGO Scale</p>
-    </header>
-
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-value" id="global-stat">0%</div>
-        <div class="stat-label">System Build</div>
+  <header
+    class="sticky top-0 z-40 bg-bg-light/80 dark:bg-bg-dark/80 backdrop-blur-lg border-b border-transparent dark:border-slate-800 transition-all duration-300">
+    <div class="px-5 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="relative">
+          <div
+            class="w-10 h-10 rounded-full bg-slate-200 bg-cover bg-center ring-2 ring-white dark:ring-slate-700 shadow-sm"
+            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDA50GyuBDyUHvsZ_zkpLRFtoor5KeIKfHM03v-Ac7BuJ0NZwdMvbyaT9yFPEiW6Iv7eJ3pIi48_H9GK4OSU1un1Ccqa_2VpALxmDprIkO_S-1ruhQoJmTULj17O8UtX4BM5Sm1RQX5T37QukAyhjlnx0BYVbIWmcJlTYQS_84b2SjakQrDVESO0N0usj8xTfoFNiYJK7c-yizXApJM5H34V55mtGYjse0uDb0UuNKNF8IuwT3DRgI-amK17AlGNADSf9ax1gzUdm1B");'>
+          </div>
+          <div
+            class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white dark:border-slate-800">
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">OneSystem OS</span>
+          <h1 class="text-lg font-bold leading-tight tracking-tight">Dashboard</h1>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value" id="p0-stat" style="color: #ef4444">0</div>
-        <div class="stat-label">Critical Items</div>
-      </div>
-    </div>
-
-    <!-- Quick Add -->
-    <div class="quick-add-form modal-style">
-      <div class="input-row">
-        <input type="text" id="task-input" class="main-input" placeholder="What needs to be done?"
-          onkeypress="if(event.key === 'Enter') window.addTask()">
-      </div>
-      <div class="options-row">
-        <select id="new-task-priority" class="select-chip">
-          <option value="high">P0 High</option>
-          <option value="medium">P1 Medium</option>
-          <option value="low">P2 Low</option>
-        </select>
-        <input type="text" id="new-task-category" class="input-chip" placeholder="Category (e.g. CRM)"
-          list="cat-suggestions">
-        <datalist id="cat-suggestions">
-          <option value="CRM">
-          <option value="Sales">
-          <option value="Automation">
-          <option value="Finance">
-        </datalist>
-        <button class="add-trigger-btn" onclick="window.addTask()">Create Task</button>
+      <div class="flex gap-2">
+        <button onclick="window.resetApp()"
+          class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 shadow-card flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-red-500 transition-colors relative"
+          title="Reset Data">
+          <span class="material-symbols-outlined text-[20px]">restart_alt</span>
+        </button>
       </div>
     </div>
-
-    <!-- Filters -->
-    <div class="toolbar">
-      <div class="filter-group">
-        <button class="filter-btn active" data-filter="all" onclick="window.setFilter('all')">All</button>
-        <button class="filter-btn" data-filter="high" onclick="window.setFilter('high')">High Prior</button>
-        <button class="filter-btn" data-filter="crm" onclick="window.setFilter('crm')">CRM</button>
-        <button class="filter-btn" data-filter="automation" onclick="window.setFilter('automation')">Auto</button>
+  </header>
+  <main class="flex flex-col w-full max-w-lg mx-auto pb-6">
+    <section class="mt-4 px-5">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">System Overview
+        </h2>
       </div>
-      <button class="filter-btn" onclick="window.resetApp()" style="color: #ef4444; border-color: #ef4444;">Reset
-        Data</button>
-    </div>
+      <div class="flex overflow-x-auto gap-3 pb-2 no-scrollbar snap-x snap-mandatory">
+        <!-- Global Stat -->
+        <div
+          class="snap-center shrink-0 w-[160px] p-4 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-soft border border-slate-100 dark:border-slate-700/50 relative overflow-hidden flex flex-col justify-between h-40">
+          <div class="flex justify-between items-start z-10">
+            <span class="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+              <span class="material-symbols-outlined text-[20px]">dns</span>
+            </span>
+          </div>
+          <div class="z-10">
+            <div class="text-3xl font-bold text-slate-900 dark:text-white mb-1" id="global-stat">0%</div>
+            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">System Build</p>
+          </div>
+          <div
+            class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full border-[6px] border-blue-500/10 dark:border-blue-400/10">
+          </div>
+        </div>
 
-    <!-- Sorting -->
-    <div class="toolbar" style="margin-top:-10px; padding-top:0;">
-      <select id="sort-select" class="select-chip" style="background:#1e293b; color:#94a3b8; border:1px solid #334155;"
-        onchange="window.setSort(this.value)">
-        <option value="default">Sort: Newest First</option>
-        <option value="p-high">Priority (High → Low)</option>
-        <option value="p-low">Priority (Low → High)</option>
-        <option value="prog-high">Progress (100% → 0%)</option>
-        <option value="prog-low">Progress (0% → 100%)</option>
+        <!-- Critical Stat -->
+        <div
+          class="snap-center shrink-0 w-[160px] p-4 rounded-2xl bg-surface-light dark:bg-surface-dark shadow-soft border border-slate-100 dark:border-slate-700/50 relative overflow-hidden flex flex-col justify-between h-40 group">
+          <div class="flex justify-between items-start z-10">
+            <span class="p-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400">
+              <span class="material-symbols-outlined text-[20px]">warning</span>
+            </span>
+          </div>
+          <div class="z-10">
+            <div class="text-3xl font-bold text-slate-900 dark:text-white mb-1" id="p0-stat">0</div>
+            <p class="text-xs font-medium text-red-500 dark:text-red-400">Critical Items</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section class="mt-8">
+      <div class="px-5 mb-4">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white">Task Management</h2>
+      </div>
+
+      <div
+        class="sticky top-[73px] z-30 bg-bg-light/95 dark:bg-bg-dark/95 backdrop-blur-sm px-5 py-2 border-b border-slate-200 dark:border-slate-800/50 mb-4 transition-all">
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex gap-2 overflow-x-auto no-scrollbar mask-gradient">
+            <button onclick="window.setFilter('all')"
+              class="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-800 dark:bg-white text-white dark:text-slate-900 shadow-sm shrink-0">All</button>
+            <button onclick="window.setFilter('high')"
+              class="px-3 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shrink-0">High
+              Priority</button>
+            <button onclick="window.setFilter('crm')"
+              class="px-3 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shrink-0">CRM</button>
+            <button onclick="window.setFilter('automation')"
+              class="px-3 py-1.5 rounded-full text-xs font-medium bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 shrink-0">Auto</button>
+          </div>
+          <button onclick="window.setSort('p-high')"
+            class="p-2 -mr-2 rounded-full text-slate-400 hover:text-brand-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <span class="material-symbols-outlined text-[20px]">sort</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-3 px-5" id="task-list">
+        <!-- Tasks will flow here -->
+        <div class="text-center text-slate-500 py-10">Loading Tasks...</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ADD MODAL (Hidden by default) -->
+  <div id="add-modal"
+    class="fixed inset-x-0 bottom-24 mx-5 p-4 rounded-xl bg-surface-dark border border-slate-700 shadow-2xl z-50 flex flex-col gap-3">
+    <input type="text" id="task-input"
+      class="w-full bg-slate-800 border-none rounded-lg p-3 text-white placeholder-slate-500 focus:ring-2 focus:ring-brand-500"
+      placeholder="What needs to be done?">
+    <div class="flex gap-2">
+      <select id="new-task-priority" class="bg-slate-800 text-slate-300 text-sm rounded-lg border-none p-2 flex-1">
+        <option value="high">High Priority</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
       </select>
+      <input type="text" id="new-task-category"
+        class="bg-slate-800 text-slate-300 text-sm rounded-lg border-none p-2 flex-1" placeholder="Category">
     </div>
-
-    <!-- List -->
-    <div class="task-list" id="task-list">
-      <!-- JS Injects Here -->
-    </div>
+    <button onclick="window.addTask(); toggleModal();"
+      class="w-full bg-brand-600 text-white font-bold py-2 rounded-lg mt-1 hover:bg-brand-500">Create Task</button>
   </div>
 
+  <!-- FLOATING BUTTON -->
+  <button onclick="toggleModal()"
+    class="fixed bottom-24 right-5 z-40 h-14 w-14 flex items-center justify-center rounded-full bg-slate-900 dark:bg-brand-600 text-white shadow-lg shadow-slate-900/30 dark:shadow-brand-600/40 hover:scale-105 active:scale-95 transition-all">
+    <span class="material-symbols-outlined text-[28px]">add</span>
+  </button>
+
+  <!-- Navigation -->
+  <nav
+    class="fixed bottom-0 w-full z-50 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 pb-safe pt-2">
+    <div class="max-w-lg mx-auto px-6 pb-4 pt-2">
+      <ul class="flex justify-between items-center">
+        <li><a class="flex flex-col items-center gap-1 text-brand-600 dark:text-brand-500" href="#"><span
+              class="material-symbols-outlined text-[24px] fill-1">dashboard</span><span
+              class="text-[10px] font-medium">Home</span></a></li>
+        <li><a class="flex flex-col items-center gap-1 text-slate-400" href="#"><span
+              class="material-symbols-outlined text-[24px]">folder</span><span
+              class="text-[10px] font-medium">Projects</span></a></li>
+        <li><a class="flex flex-col items-center gap-1 text-slate-400" href="#"><span
+              class="material-symbols-outlined text-[24px]">settings</span><span
+              class="text-[10px] font-medium">Settings</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <script>
+    function toggleModal() {
+      document.getElementById('add-modal').classList.toggle('open');
+      if (document.getElementById('add-modal').classList.contains('open')) {
+        document.getElementById('task-input').focus();
+      }
+    }
+  </script>
   <script src="app.js"></script>
 </body>
 
