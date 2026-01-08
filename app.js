@@ -368,12 +368,24 @@ window.addTask = function () {
   window.render();
 };
 
-window.updateCategory = function (id, el) {
+window.updateCategory = function (id, val) {
   const task = tasks.find(t => t.id === id);
-  const newCat = el.innerText.trim();
+  // Support both element (contenteditable) and direct value
+  const newCat = (val instanceof HTMLElement) ? val.innerText.trim() : val;
+
   if (task && newCat && newCat !== task.category) {
     task.category = newCat;
     window.save();
+    if (!(val instanceof HTMLElement)) window.render(); // Re-render if changed via dropdown
+  }
+};
+
+window.setPriority = function (id, val) {
+  const task = tasks.find(t => t.id === id);
+  if (task && task.priority !== val) {
+    task.priority = val;
+    window.save();
+    window.render();
   }
 };
 
@@ -556,6 +568,31 @@ window.render = function () {
 
         <!-- Expanded Content (Hidden by default logic handled by display:none via class logic if needed, but here we render it and let CSS toggle it? No, old app.js used .card-expanded. We need Tailwind equivalent) -->
         <div class="card-expanded mt-4 pt-3 border-t border-dashed border-slate-700" style="display:none;" id="expand-${task.id}">
+             <!-- Edit Details Row -->
+             <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="relative">
+                    <label class="block text-[10px] uppercase text-slate-500 font-bold mb-1">Priority</label>
+                    <select onchange="window.setPriority('${task.id}', this.value)" class="w-full bg-slate-800 text-xs text-white rounded p-1.5 border border-slate-700">
+                        <option value="high" ${task.priority === 'high' ? 'selected' : ''}>High (P0)</option>
+                        <option value="medium" ${task.priority === 'medium' ? 'selected' : ''}>Medium (P1)</option>
+                        <option value="low" ${task.priority === 'low' ? 'selected' : ''}>Low (P2)</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <label class="block text-[10px] uppercase text-slate-500 font-bold mb-1">Category</label>
+                    <select onchange="window.updateCategory('${task.id}', this.value)" class="w-full bg-slate-800 text-xs text-white rounded p-1.5 border border-slate-700">
+                        <option value="General" ${task.category === 'General' ? 'selected' : ''}>General</option>
+                        <option value="CRM" ${task.category === 'CRM' ? 'selected' : ''}>CRM</option>
+                        <option value="Automation" ${task.category === 'Automation' ? 'selected' : ''}>Automation</option>
+                        <option value="Logistics" ${task.category === 'Logistics' ? 'selected' : ''}>Logistics</option>
+                        <option value="Fieldwork" ${task.category === 'Fieldwork' ? 'selected' : ''}>Fieldwork</option>
+                        <option value="Finance" ${task.category === 'Finance' ? 'selected' : ''}>Finance</option>
+                        <option value="IT" ${task.category === 'IT' ? 'selected' : ''}>IT Support</option>
+                        <option value="Incident" ${task.category === 'Incident' ? 'selected' : ''}>Incident</option>
+                    </select>
+                </div>
+             </div>
+
              <!-- Progress Control -->
              <div class="flex items-center gap-2 mb-3">
                 <input type="range" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer" min="0" max="100" value="${progress}"
