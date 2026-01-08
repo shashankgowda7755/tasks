@@ -109,6 +109,8 @@
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">System Overview
         </h2>
+        <button onclick="alert('Full Analytics Dashboard coming in v2')"
+          class="text-brand-500 text-xs font-semibold hover:underline">Full Report</button>
       </div>
       <div class="flex overflow-x-auto gap-3 pb-2 no-scrollbar snap-x snap-mandatory">
         <!-- Global Stat -->
@@ -148,6 +150,25 @@
     <section class="mt-8">
       <div class="px-5 mb-4">
         <h2 class="text-xl font-bold text-slate-900 dark:text-white">Task Management</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Manage field operations and logistics.</p>
+      </div>
+
+      <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2 mb-4">
+        <button onclick="toggleModal()"
+          class="flex items-center gap-2 pl-3 pr-4 py-2.5 bg-brand-500 text-white rounded-xl shadow-lg shadow-brand-500/20 active:scale-95 transition-transform shrink-0">
+          <span class="material-symbols-outlined text-[20px]">add_circle</span>
+          <span class="text-sm font-semibold">New Task</span>
+        </button>
+        <button onclick="alert('Incident Logging coming soon')"
+          class="flex items-center gap-2 pl-3 pr-4 py-2.5 bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl shadow-sm active:scale-95 transition-transform shrink-0">
+          <span class="material-symbols-outlined text-[20px] text-accent-red">emergency</span>
+          <span class="text-sm font-medium">Log Incident</span>
+        </button>
+        <button onclick="alert('Report Generation coming soon')"
+          class="flex items-center gap-2 pl-3 pr-4 py-2.5 bg-white dark:bg-surface-dark border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl shadow-sm active:scale-95 transition-transform shrink-0">
+          <span class="material-symbols-outlined text-[20px] text-accent-purple">description</span>
+          <span class="text-sm font-medium">Report</span>
+        </button>
       </div>
 
       <div
