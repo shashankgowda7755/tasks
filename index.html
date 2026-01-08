@@ -464,6 +464,61 @@
     </div>
   </div>
 
+  <!-- PWA INSTALL PROMPT (Mobile) -->
+  <div id="pwa-install-app"
+    class="hidden fixed bottom-0 left-0 right-0 z-[60] p-4 pb-safe bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_20px_rgba(0,0,0,0.2)] transform transition-transform duration-300 translate-y-full">
+    <div class="max-w-md mx-auto flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div
+          class="size-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/20">
+          <span class="material-symbols-outlined text-[20px]">dns</span>
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-900 dark:text-white text-sm">Install OneSystem</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Add to home screen for quick access</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="window.dismissInstall()"
+          class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs font-medium">Later</button>
+        <button onclick="window.installPwa()"
+          class="bg-brand-500 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-md shadow-brand-500/20 active:scale-95 transition-all">Install</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- IOS INSTALL INSTRUCTIONS MODAL -->
+  <div id="ios-install-modal"
+    class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 transition-opacity duration-300">
+    <div
+      class="bg-white dark:bg-slate-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl transform transition-all duration-300 translate-y-full sm:translate-y-0 relative">
+      <button onclick="document.getElementById('ios-install-modal').classList.add('hidden')"
+        class="absolute top-4 right-4 text-slate-400"><span class="material-symbols-outlined">close</span></button>
+      <div class="flex justify-center mb-4">
+        <span class="material-symbols-outlined text-4xl text-brand-500">ios_share</span>
+      </div>
+      <h3 class="text-lg font-bold text-center dark:text-white mb-2">Install on iOS</h3>
+      <p class="text-sm text-center text-slate-500 dark:text-slate-400 mb-6">Install this app on your iPhone for the
+        best experience.</p>
+
+      <div class="flex flex-col gap-4 text-sm dark:text-slate-300">
+        <div class="flex items-center gap-3">
+          <span
+            class="size-6 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-bold text-xs">1</span>
+          <span>Tap the <span class="font-bold">Share</span> button below</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span
+            class="size-6 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-bold text-xs">2</span>
+          <span>Select <span class="font-bold">Add to Home Screen</span></span>
+        </div>
+      </div>
+      <div
+        class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 translate-y-full w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-white dark:border-t-slate-800">
+      </div>
+    </div>
+  </div>
+
   <script>
     function toggleModal(priority, category) {
       const modal = document.getElementById('add-modal');

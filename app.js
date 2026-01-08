@@ -815,6 +815,56 @@ window.deleteTodo = function (e, id) {
   }
 };
 
+// --- PWA INSTALL LOGIC ---
+let deferredPrompt;
+const installModal = document.getElementById('pwa-install-app');
+
+// Check if already installed (Standalone)
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+if (!isStandalone) {
+  // Android / Chrome
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Show after a short delay
+    setTimeout(() => {
+      if (installModal) {
+        installModal.classList.remove('hidden');
+        // Small animation delay
+        setTimeout(() => installModal.classList.remove('translate-y-full'), 100);
+      }
+    }, 3000);
+  });
+}
+
+window.installPwa = async function () {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User response to the install prompt: ${outcome}`);
+    deferredPrompt = null;
+    window.dismissInstall();
+  } else {
+    // Fallback for iOS detection
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+      const iosModal = document.getElementById('ios-install-modal');
+      if (iosModal) {
+        iosModal.classList.remove('hidden');
+        iosModal.querySelector('div').classList.remove('translate-y-full');
+      }
+    }
+  }
+};
+
+window.dismissInstall = function () {
+  if (installModal) {
+    installModal.classList.add('translate-y-full');
+    setTimeout(() => installModal.classList.add('hidden'), 300);
+  }
+};
+
 
 
 
