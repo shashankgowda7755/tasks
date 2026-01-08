@@ -3,10 +3,17 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OneSystem OS - Task Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>OneSystem OS</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/192/task.png">
 </head>
 
 <body>
@@ -29,10 +36,27 @@
     </div>
 
     <!-- Quick Add -->
-    <div class="quick-add-form">
-      <input type="text" id="task-input" class="input-transparent" placeholder="Type a new task and press Enter..."
-        onkeypress="if(event.key === 'Enter') window.addTask()">
-      <button class="add-trigger" onclick="window.addTask()">Add Task</button>
+    <div class="quick-add-form modal-style">
+      <div class="input-row">
+        <input type="text" id="task-input" class="main-input" placeholder="What needs to be done?"
+          onkeypress="if(event.key === 'Enter') window.addTask()">
+      </div>
+      <div class="options-row">
+        <select id="new-task-priority" class="select-chip">
+          <option value="high">P0 High</option>
+          <option value="medium">P1 Medium</option>
+          <option value="low">P2 Low</option>
+        </select>
+        <input type="text" id="new-task-category" class="input-chip" placeholder="Category (e.g. CRM)"
+          list="cat-suggestions">
+        <datalist id="cat-suggestions">
+          <option value="CRM">
+          <option value="Sales">
+          <option value="Automation">
+          <option value="Finance">
+        </datalist>
+        <button class="add-trigger-btn" onclick="window.addTask()">Create Task</button>
+      </div>
     </div>
 
     <!-- Filters -->
@@ -45,6 +69,18 @@
       </div>
       <button class="filter-btn" onclick="window.resetApp()" style="color: #ef4444; border-color: #ef4444;">Reset
         Data</button>
+    </div>
+
+    <!-- Sorting -->
+    <div class="toolbar" style="margin-top:-10px; padding-top:0;">
+      <select id="sort-select" class="select-chip" style="background:#1e293b; color:#94a3b8; border:1px solid #334155;"
+        onchange="window.setSort(this.value)">
+        <option value="default">Sort: Newest First</option>
+        <option value="p-high">Priority (High → Low)</option>
+        <option value="p-low">Priority (Low → High)</option>
+        <option value="prog-high">Progress (100% → 0%)</option>
+        <option value="prog-low">Progress (0% → 100%)</option>
+      </select>
     </div>
 
     <!-- List -->

@@ -44,7 +44,8 @@ function handleRequest(e) {
                     logs: logs,
                     notes: row[7],
                     completed: row[8] === true || row[8] === "true",
-                    createdAt: row[9]
+                    createdAt: row[9],
+                    isVisible: row[10] === '' ? true : (row[10] === true || row[10] === "true") // New Field
                 };
             }).filter(t => t.id); // Filter empty rows
 
@@ -61,7 +62,7 @@ function handleRequest(e) {
             sheet.clearContents();
 
             // Headers
-            const headers = ["ID", "Title", "Priority", "Category", "Due Date", "Progress", "Logs (JSON)", "Legacy Notes", "Completed", "Created At"];
+            const headers = ["ID", "Title", "Priority", "Category", "Due Date", "Progress", "Logs (JSON)", "Legacy Notes", "Completed", "Created At", "Visible"];
             sheet.appendRow(headers);
 
             if (tasks.length > 0) {
@@ -75,7 +76,8 @@ function handleRequest(e) {
                     JSON.stringify(t.logs || []), // Store complex log feed as JSON
                     t.notes || '',
                     t.completed,
-                    t.createdAt
+                    t.createdAt,
+                    t.isVisible // New Field
                 ]);
 
                 // Batch write for speed
@@ -100,7 +102,7 @@ function response(data) {
 
 function setupSheet() {
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    const headers = ["ID", "Title", "Priority", "Category", "Due Date", "Progress", "Logs (JSON)", "Legacy Notes", "Completed", "Created At"];
+    const headers = ["ID", "Title", "Priority", "Category", "Due Date", "Progress", "Logs (JSON)", "Legacy Notes", "Completed", "Created At", "Visible"];
     sheet.appendRow(headers);
     sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold");
     sheet.setFrozenRows(1);

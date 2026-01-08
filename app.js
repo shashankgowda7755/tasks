@@ -145,6 +145,7 @@ const INITIAL_DATA_RAW = [
 // STATE
 let tasks = [];
 let currentFilter = 'all';
+let currentSort = 'default';
 
 // FUNCTIONS (Global)
 window.init = async function () {
@@ -339,22 +340,41 @@ window.setFilter = function (filter) {
 
 window.addTask = function () {
   const input = document.getElementById('task-input');
+  const pSelect = document.getElementById('new-task-priority');
+  const cInput = document.getElementById('new-task-category');
+
   const title = input.value.trim();
+  const priority = pSelect.value;
+  const category = cInput.value.trim() || 'General';
+
   if (!title) return;
 
   tasks.unshift({
     id: Date.now().toString(),
     title,
-    priority: 'high',
-    category: 'General',
+    priority: priority,
+    category: category,
     dueDate: new Date().toISOString().split('T')[0],
     progress: 0,
     logs: [],
-    notes: ''
+    notes: '',
+    completed: false,
+    isVisible: true,
+    createdAt: Date.now()
   });
   window.save();
   input.value = '';
+  cInput.value = '';
   window.render();
+};
+
+window.updateCategory = function (id, el) {
+  const task = tasks.find(t => t.id === id);
+  const newCat = el.innerText.trim();
+  if (task && newCat && newCat !== task.category) {
+    task.category = newCat;
+    window.save();
+  }
 };
 
 // --- LOGGING SYSTEM ---
@@ -406,6 +426,11 @@ window.toggleVisibility = function (e, id) {
   }
 };
 
+window.setSort = function (sortVal) {
+  currentSort = sortVal;
+  window.render();
+};
+
 // RENDER
 window.render = function () {
   // Stats
@@ -423,6 +448,23 @@ window.render = function () {
   if (currentFilter === 'high') filtered = tasks.filter(t => t.priority === 'high');
   else if (currentFilter === 'crm') filtered = tasks.filter(t => t.category === 'CRM');
   else if (currentFilter === 'automation') filtered = tasks.filter(t => t.category === 'Automation');
+
+  // Sort
+  if (currentSort !== 'default') {
+    filtered.sort((a, b) => {
+      if (currentSort === 'p-high') {
+        const pMap = { high: 3, medium: 2, low: 1 };
+        return pMap[b.priority] - pMap[a.priority];
+      }
+      if (currentSort === 'p-low') {
+        const pMap = { high: 3, medium: 2, low: 1 };
+        return pMap[a.priority] - pMap[b.priority];
+      }
+      if (currentSort === 'prog-high') { return (b.progress || 0) - (a.progress || 0); }
+      if (currentSort === 'prog-low') { return (a.progress || 0) - (b.progress || 0); }
+      return 0;
+    });
+  }
 
   const list = document.getElementById('task-list');
   list.innerHTML = '';
@@ -476,7 +518,11 @@ window.render = function () {
                       onblur="window.updateTitle('${task.id}', this)"
                       onclick="event.stopPropagation()"
                       style="cursor:text; outline:none; border-bottom:1px dashed #475569;">${escapeHtml(task.title)}</span>
-                <span class="tag">${task.category || 'Gen'}</span>
+                <span class="tag" contenteditable="true" 
+                      onblur="window.updateCategory('${task.id}', this)"
+                      onclick="event.stopPropagation()"
+                      title="Click to edit category"
+                      style="cursor:text;">${task.category || 'Gen'}</span>
                 ${isHidden ? '<span class="tag" style="background:#475569; color:white;">HIDDEN</span>' : ''}
              </div>
              <div class="card-meta">
