@@ -682,19 +682,84 @@ window.saveTodos = function () {
   window.renderTodos();
 };
 
-window.addNewTodo = function () {
-  // Simple Prompt for "Use and Throw"
-  const text = prompt("What needs to be done today?");
-  if (text && text.trim()) {
+window.addToDoItem = function () {
+  const textInput = document.getElementById('todo-input-text');
+  const dateInput = document.getElementById('todo-input-date');
+  const text = textInput.value.trim();
+  const date = dateInput.value;
+
+  if (text) {
     todos.unshift({
       id: Date.now(),
-      text: text.trim(),
+      text: text,
+      date: date || null, // Capture date
       done: false,
       createdAt: Date.now()
     });
     window.saveTodos();
+    textInput.value = '';
+    dateInput.value = ''; // Reset date
   }
 };
+
+window.renderTodos = function () {
+  const container = document.getElementById('todo-list-container');
+  const countEl = document.getElementById('todo-count');
+
+  if (!container) return;
+
+  // Filter valid dates if needed, or just show all
+  const pending = todos.filter(t => !t.done).length;
+  if (countEl) countEl.innerText = pending;
+
+  container.innerHTML = '';
+
+  if (todos.length === 0) {
+    container.innerHTML = '<div class="text-center text-slate-500 py-10 text-sm">No tasks for today. Chill! 🌴</div>';
+    return;
+  }
+
+  todos.forEach(t => {
+    // Format Date
+    let dateStr = '';
+    if (t.date) {
+      const d = new Date(t.date);
+      // Format: "Today, 5:00 PM" or "Jan 12, 9:00 AM"
+      const isToday = new Date().toDateString() === d.toDateString();
+      const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      dateStr = isToday ? `Today, ${timeStr}` : `${d.toLocaleDateString([], { month: 'short', day: 'numeric' })}, ${timeStr}`;
+    }
+
+    const html = `
+        <div class="group flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-card-dark shadow-sm ring-1 ring-black/5 dark:ring-white/10 active:scale-[0.98] transition-all cursor-pointer ${t.done ? 'opacity-50' : ''}" onclick="window.toggleTodo(${t.id})">
+            <div class="flex-shrink-0">
+                <div class="w-6 h-6 rounded-full border-2 ${t.done ? 'border-brand-500 bg-brand-500' : 'border-priority-medium dark:border-slate-600'} flex items-center justify-center transition-colors">
+                    ${t.done ? '<span class="material-symbols-outlined text-white text-sm">check</span>' : ''}
+                </div>
+            </div>
+            <div class="flex-1 min-w-0">
+                <h4 class="text-base font-semibold ${t.done ? 'text-slate-400 line-through' : 'text-slate-900 dark:text-white'} truncate text-left">${escapeHtml(t.text)}</h4>
+                ${dateStr ? `<div class="flex items-center gap-1 mt-0.5 text-xs text-slate-500 font-medium">
+                    <span class="material-symbols-outlined text-[14px]">event</span> ${dateStr}
+                </div>` : ''}
+            </div>
+            <button onclick="window.deleteTodo(event, ${t.id})" class="text-slate-300 hover:text-red-500">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+        </div>
+        `;
+    container.insertAdjacentHTML('beforeend', html);
+  });
+};
+
+// INITIALIZATION
+window.renderTodos(); // Ensure To-Do list loads immediately
+// Also set default date input to today
+try {
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById('todo-input-date').value = now.toISOString().slice(0, 16);
+} catch (e) { }
 
 window.toggleTodo = function (id) {
   const t = todos.find(x => x.id == id);
@@ -721,41 +786,7 @@ window.deleteTodo = function (e, id) {
   }
 };
 
-window.renderTodos = function () {
-  const container = document.getElementById('todo-list-container');
-  const countEl = document.getElementById('todo-count'); // Pending Count
 
-  if (!container) return; // Not in view
-
-  const pending = todos.filter(t => !t.done).length;
-  if (countEl) countEl.innerText = pending;
-
-  container.innerHTML = '';
-
-  if (todos.length === 0) {
-    container.innerHTML = '<div class="text-center text-slate-500 py-10 text-sm">No tasks for today. Chill! 🌴</div>';
-    return;
-  }
-
-  todos.forEach(t => {
-    const html = `
-        <div class="group flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-card-dark shadow-sm ring-1 ring-black/5 dark:ring-white/10 active:scale-[0.98] transition-all cursor-pointer ${t.done ? 'opacity-50' : ''}" onclick="window.toggleTodo(${t.id})">
-            <div class="flex-shrink-0">
-                <div class="w-6 h-6 rounded-full border-2 ${t.done ? 'border-brand-500 bg-brand-500' : 'border-slate-300 dark:border-slate-600'} flex items-center justify-center transition-colors">
-                    ${t.done ? '<span class="material-symbols-outlined text-white text-sm">check</span>' : ''}
-                </div>
-            </div>
-            <div class="flex-1 min-w-0">
-                <h4 class="text-base font-semibold ${t.done ? 'text-slate-400 line-through' : 'text-slate-900 dark:text-white'} truncate">${escapeHtml(t.text)}</h4>
-            </div>
-            <button onclick="window.deleteTodo(event, ${t.id})" class="text-slate-300 hover:text-red-500">
-                <span class="material-symbols-outlined">delete</span>
-            </button>
-        </div>
-        `;
-    container.insertAdjacentHTML('beforeend', html);
-  });
-};
 
 
 
