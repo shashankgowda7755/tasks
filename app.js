@@ -731,15 +731,15 @@ window.renderTodos = function () {
     }
 
     const html = `
-        <div class="group flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-card-dark shadow-sm ring-1 ring-black/5 dark:ring-white/10 active:scale-[0.98] transition-all cursor-pointer ${t.done ? 'opacity-50' : ''}" onclick="window.toggleTodo(${t.id})">
+        <div class="group flex items-center gap-4 p-4 rounded-xl bg-white dark:bg-slate-800 shadow-sm ring-1 ring-black/5 dark:ring-white/10 active:scale-[0.98] transition-all cursor-pointer ${t.done ? 'opacity-50' : ''}" onclick="window.toggleTodo(${t.id})">
             <div class="flex-shrink-0">
-                <div class="w-6 h-6 rounded-full border-2 ${t.done ? 'border-brand-500 bg-brand-500' : 'border-priority-medium dark:border-slate-600'} flex items-center justify-center transition-colors">
+                <div class="w-6 h-6 rounded-full border-2 ${t.done ? 'border-brand-500 bg-brand-500' : 'border-slate-300 dark:border-slate-500'} flex items-center justify-center transition-colors">
                     ${t.done ? '<span class="material-symbols-outlined text-white text-sm">check</span>' : ''}
                 </div>
             </div>
             <div class="flex-1 min-w-0">
                 <h4 class="text-base font-semibold ${t.done ? 'text-slate-400 line-through' : 'text-slate-900 dark:text-white'} truncate text-left">${escapeHtml(t.text)}</h4>
-                ${dateStr ? `<div class="flex items-center gap-1 mt-0.5 text-xs text-slate-500 font-medium">
+                ${dateStr ? `<div class="flex items-center gap-1 mt-0.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
                     <span class="material-symbols-outlined text-[14px]">event</span> ${dateStr}
                 </div>` : ''}
             </div>
