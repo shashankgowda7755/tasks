@@ -385,6 +385,13 @@ Generated: ${new Date().toLocaleTimeString()}
       navigator.clipboard.writeText(text).then(() => alert('Report copied to clipboard!'));
     };
   </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js')
+        .then(() => console.log('Service Worker Registered'))
+        .catch(e => console.log('SW Registration Failed', e));
+    }
+  </script>
   <script src="app.js"></script>
 </body>
 

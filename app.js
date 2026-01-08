@@ -444,10 +444,14 @@ window.render = function () {
   if (document.getElementById('p0-stat')) document.getElementById('p0-stat').textContent = p0;
 
   // Filter
+  // Filter
   let filtered = tasks;
-  if (currentFilter === 'high') filtered = tasks.filter(t => t.priority === 'high');
-  else if (currentFilter === 'crm') filtered = tasks.filter(t => t.category === 'CRM');
-  else if (currentFilter === 'automation') filtered = tasks.filter(t => t.category === 'Automation');
+  if (currentFilter === 'high') {
+    filtered = tasks.filter(t => t.priority === 'high');
+  } else if (currentFilter !== 'all') {
+    // Generic category filter (case insensitive)
+    filtered = tasks.filter(t => (t.category || '').toLowerCase() === currentFilter.toLowerCase());
+  }
 
   // Sort
   if (currentSort !== 'default') {
