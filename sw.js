@@ -1,11 +1,10 @@
-const CACHE_NAME = 'task-tracker-v1';
+const CACHE_NAME = 'task-tracker-v2';
 const ASSETS = [
     './',
     './index.html',
     './app.js',
     './manifest.json',
-    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
-    'https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined',
+    './fonts/fonts.css',
     'https://cdn.tailwindcss.com'
 ];
 
